@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academic Calendar — StudentPal</title>
+  <script>(function(){try{var t=localStorage.getItem('studentpal-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2306B6D4'/%3E%3Cstop offset='1' stop-color='%232563EB'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .cal-wrap {
+      background:var(--color-surface);
+      border:1px solid var(--color-border);
+      border-radius:var(--r-lg);
+      padding:var(--s6);
+      overflow-x:auto;
+      transition:var(--t-theme);
+    }
+    .cal-legend { display:flex; flex-wrap:wrap; gap:var(--s3); margin-bottom:var(--s5); }
+    .cal-legend-item { display:flex; align-items:center; gap:6px; font-size:.76rem; color:var(--color-text-muted); }
+    .cal-legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__top">
+      <a href="dashboard.html" class="brand"><span class="brand__mark"><i data-lucide="graduation-cap"></i></span><span class="brand__name">StudentPal</span></a>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i data-lucide="x"></i></button>
+    </div>
+    <nav class="sidebar__nav" aria-label="Main navigation">
+      <a href="dashboard.html"     class="nav-item"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+      <a href="resources.html"     class="nav-item"><i data-lucide="folder-open"></i><span>Resources</span></a>
+      <a href="announcements.html" class="nav-item"><i data-lucide="megaphone"></i><span>Announcements</span></a>
+      <a href="opportunities.html" class="nav-item"><i data-lucide="briefcase"></i><span>Opportunities</span></a>
+      <a href="community.html"     class="nav-item"><i data-lucide="users"></i><span>Community</span></a>
+      <a href="assignments.html"   class="nav-item"><i data-lucide="clipboard-list"></i><span>Assignments</span></a>
+      <a href="calendar.html"      class="nav-item is-active" aria-current="page"><i data-lucide="calendar-days"></i><span>Academic Calendar</span></a>
+      <a href="settings.html"      class="nav-item"><i data-lucide="settings"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar__profile">
+      <span class="sidebar__profile-avatar">AR</span>
+      <div class="sidebar__profile-info"><p class="sidebar__profile-name">Alienrocky</p><p class="sidebar__profile-meta">Computer Science · 200L</p></div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app__body">
+    <header class="topbar" id="topbar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false"><i data-lucide="menu" class="icon-sm"></i></button>
+      <div class="topbar__info">
+        <p class="topbar__greeting" id="greeting">Good Morning, Alien 👋</p>
+        <p class="topbar__datetime" id="topbarDatetime"></p>
+      </div>
+      <div class="topbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" placeholder="Search across StudentPal…" aria-label="Global search" /></div>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+          <i data-lucide="sun" class="tt-icon tt-icon--sun"></i><i data-lucide="moon" class="tt-icon tt-icon--moon"></i>
+        </button>
+        <div class="dropdown">
+          <button class="icon-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false"><i data-lucide="bell" class="icon-sm"></i><span class="icon-btn__badge">3</span></button>
+          <div class="dropdown__panel" id="notifPanel" role="menu">
+            <p class="dropdown__head">Notifications</p>
+            <a href="#" class="dropdown__item"><i data-lucide="calendar" class="icon-xs"></i>CSC 201 CA Test on July 3</a>
+            <a href="#" class="dropdown__item"><i data-lucide="calendar" class="icon-xs"></i>Exams begin July 14</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="topbar-avatar" id="avatarBtn" aria-label="Account menu" aria-expanded="false">AR</button>
+          <div class="dropdown__panel" id="avatarPanel" role="menu">
+            <div style="padding:var(--s3);border-bottom:1px solid var(--color-border)"><p style="font-weight:600;font-size:.88rem">Alienrocky</p><p style="font-size:.74rem;color:var(--color-text-faint)">alienrocky@aaua.edu.ng</p></div>
+            <a href="settings.html" class="dropdown__item"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+            <div class="dropdown__divider"></div>
+            <a href="login.html" class="dropdown__item dropdown__item--danger"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app__content" id="calendarPage">
+      <div class="page-header">
+        <h1>Academic Calendar</h1>
+        <p>Your semester schedule — tests, exams, events, and deadlines in one view.</p>
+      </div>
+
+      <div class="calendar-layout">
+
+        <!-- CALENDAR PANEL -->
+        <div class="cal-wrap">
+          <!-- Legend -->
+          <div class="cal-legend">
+            <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--color-danger)"></span>Exam / Deadline</span>
+            <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--color-primary)"></span>CA Test</span>
+            <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--color-blue)"></span>School Event</span>
+            <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--color-success)"></span>Break / Holiday</span>
+            <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--color-warning)"></span>Assignment Due</span>
+            <span class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--color-purple)"></span>Faculty Event</span>
+          </div>
+
+          <!-- Nav + grid -->
+          <div class="cal-nav">
+            <h2 id="calMonthLabel">July 2026</h2>
+            <div class="cal-nav__btns">
+              <button class="cal-nav__btn" id="calPrev" aria-label="Previous month"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+              <button class="cal-nav__btn" id="calNext" aria-label="Next month"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+            </div>
+          </div>
+
+          <table class="cal-grid" aria-label="Academic calendar">
+            <thead>
+              <tr>
+                <th scope="col">Sun</th><th scope="col">Mon</th><th scope="col">Tue</th>
+                <th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th>
+              </tr>
+            </thead>
+            <tbody id="calBody"></tbody>
+          </table>
+        </div>
+
+        <!-- UPCOMING EVENTS WIDGET -->
+        <div style="display:flex;flex-direction:column;gap:var(--s5)">
+          <div class="panel">
+            <div class="panel__head"><h2>Upcoming Events</h2></div>
+            <div class="upcoming-events">
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-danger)"></span>
+                <div>
+                  <p class="upcoming-event__date">June 30, 2026</p>
+                  <p class="upcoming-event__title">Registration Deadline</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-primary)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 3, 2026</p>
+                  <p class="upcoming-event__title">CSC 201 CA Test</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-warning)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 5, 2026</p>
+                  <p class="upcoming-event__title">MTH 201 Assignment Due</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-blue)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 10, 2026</p>
+                  <p class="upcoming-event__title">Faculty of Science Meeting</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-danger)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 14, 2026</p>
+                  <p class="upcoming-event__title">Second Semester Exams Begin</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-purple)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 20, 2026</p>
+                  <p class="upcoming-event__title">Faculty Annual Dinner</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-success)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 28, 2026</p>
+                  <p class="upcoming-event__title">Semester Break Begins</p>
+                </div>
+              </div>
+
+              <div class="upcoming-event">
+                <span class="upcoming-event__dot" style="background:var(--color-danger)"></span>
+                <div>
+                  <p class="upcoming-event__date">July 30, 2026</p>
+                  <p class="upcoming-event__title">Late Registration Deadline</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head"><h2>Exam Schedule</h2></div>
+            <div style="display:flex;flex-direction:column;gap:var(--s3)">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0;border-bottom:1px solid var(--color-border)">
+                <div><p style="font-size:.88rem;font-weight:600">PHY 101 Exam</p><p style="font-size:.74rem;color:var(--color-text-faint)">Physics</p></div>
+                <span class="badge badge--red">Jul 15</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0;border-bottom:1px solid var(--color-border)">
+                <div><p style="font-size:.88rem;font-weight:600">CSC 201 Exam</p><p style="font-size:.74rem;color:var(--color-text-faint)">Data Structures</p></div>
+                <span class="badge badge--red">Jul 16</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0;border-bottom:1px solid var(--color-border)">
+                <div><p style="font-size:.88rem;font-weight:600">MTH 201 Exam</p><p style="font-size:.74rem;color:var(--color-text-faint)">Linear Algebra</p></div>
+                <span class="badge badge--red">Jul 18</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0">
+                <div><p style="font-size:.88rem;font-weight:600">GST 202 Exam</p><p style="font-size:.74rem;color:var(--color-text-faint)">Logic &amp; Philosophy</p></div>
+                <span class="badge badge--red">Jul 21</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — StudentPal</title>
+  <script>(function(){try{var t=localStorage.getItem('studentpal-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2306B6D4'/%3E%3Cstop offset='1' stop-color='%232563EB'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/admin.css" />
+</head>
+<body>
+<div class="admin-app">
+
+  <!-- ======================== SIDEBAR ======================== -->
+  <aside class="admin-sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-lockup">
+        <div class="brand-mark"><i data-lucide="shield"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">StudentPal</span>
+          <span class="brand-role">Admin Portal</span>
+        </div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close"><i data-lucide="x"></i></button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Admin navigation">
+      <span class="nav-section-label">Overview</span>
+      <a href="#" class="nav-link is-active" data-page="dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-link" data-page="analytics"><i data-lucide="bar-chart-2"></i><span>Analytics</span></a>
+
+      <span class="nav-section-label">Management</span>
+      <a href="#" class="nav-link" data-page="students"><i data-lucide="users"></i><span>Students</span></a>
+      <a href="#" class="nav-link" data-page="resources"><i data-lucide="folder-open"></i><span>Resources</span></a>
+      <a href="#" class="nav-link" data-page="announcements"><i data-lucide="megaphone"></i><span>Announcements</span></a>
+      <a href="#" class="nav-link" data-page="opportunities"><i data-lucide="briefcase"></i><span>Opportunities</span></a>
+      <a href="#" class="nav-link" data-page="community"><i data-lucide="message-square"></i><span>Community</span></a>
+      <a href="#" class="nav-link" data-page="assignments"><i data-lucide="clipboard-list"></i><span>Assignments</span></a>
+      <a href="#" class="nav-link" data-page="calendar"><i data-lucide="calendar-days"></i><span>Academic Calendar</span></a>
+
+      <span class="nav-section-label">Intelligence</span>
+      <a href="#" class="nav-link" data-page="ai"><i data-lucide="cpu"></i><span>AI Resource Search</span></a>
+
+      <span class="nav-section-label">System</span>
+      <a href="#" class="nav-link" data-page="settings"><i data-lucide="settings"></i><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-profile">
+      <div class="admin-avatar">SA</div>
+      <div>
+        <p class="sidebar-profile-name">Super Admin</p>
+        <p class="sidebar-profile-role">SP-ADMIN-001</p>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ======================== BODY ======================== -->
+  <div class="admin-body">
+
+    <!-- TOPBAR -->
+    <header class="admin-topbar">
+      <button class="topbar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false"><i data-lucide="menu" class="icon-sm"></i></button>
+      <div class="topbar-info">
+        <p class="topbar-greeting" id="greeting">Good Morning, Admin 👋</p>
+        <p class="topbar-datetime" id="topbarDatetime"></p>
+      </div>
+      <div class="topbar-search">
+        <i data-lucide="search" class="icon-sm"></i>
+        <input type="text" placeholder="Search students, resources, reports…" aria-label="Search" />
+      </div>
+      <div class="topbar-actions">
+        <button class="tt-btn" id="themeToggle" aria-label="Switch theme" aria-pressed="false">
+          <i data-lucide="sun"  class="tt-icon tt-icon--sun"></i>
+          <i data-lucide="moon" class="tt-icon tt-icon--moon"></i>
+        </button>
+        <div class="dropdown">
+          <button class="notif-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false">
+            <i data-lucide="bell" class="icon-sm"></i>
+            <span class="notif-badge">5</span>
+          </button>
+          <div class="dropdown-panel" id="notifPanel" role="menu">
+            <p class="dp-head">Recent Alerts</p>
+            <a href="#" class="dp-item"><span class="dp-item-icon dp-item-icon--green"><i data-lucide="user-plus" class="icon-xs"></i></span><span class="dp-item-body"><strong>New registration</strong><small>Tobi A. just joined · 2 min ago</small></span></a>
+            <a href="#" class="dp-item"><span class="dp-item-icon dp-item-icon--red"><i data-lucide="flag" class="icon-xs"></i></span><span class="dp-item-body"><strong>Content reported</strong><small>Community post flagged · 8 min ago</small></span></a>
+            <a href="#" class="dp-item"><span class="dp-item-icon dp-item-icon--cyan"><i data-lucide="upload" class="icon-xs"></i></span><span class="dp-item-body"><strong>Resource uploaded</strong><small>CSC 201 notes added · 15 min ago</small></span></a>
+            <a href="#" class="dp-item"><span class="dp-item-icon dp-item-icon--amber"><i data-lucide="alert-triangle" class="icon-xs"></i></span><span class="dp-item-body"><strong>Storage at 78%</strong><small>Consider clean-up · 1 hr ago</small></span></a>
+            <a href="#" class="dp-footer">View all notifications</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="admin-avatar admin-avatar--sm" id="avatarBtn" aria-label="Admin menu" aria-expanded="false" style="cursor:pointer">SA</button>
+          <div class="dropdown-panel" id="avatarPanel" role="menu">
+            <div class="dp-profile-head">
+              <div class="admin-avatar">SA</div>
+              <div><p class="dp-profile-name">Super Admin</p><p class="dp-profile-email">admin@studentpal.app</p></div>
+            </div>
+            <div class="dp-divider"></div>
+            <a href="#" class="dp-item" data-page-link="settings"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+            <a href="login.html" class="dp-item" style="color:var(--red)"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================== MAIN CONTENT ======================== -->
+    <main class="admin-content">
+
+      <!-- =================== PAGE: DASHBOARD =================== -->
+      <section class="admin-page is-active" id="page-dashboard">
+        <div class="page-header">
+          <h1>Platform Overview</h1>
+          <p>Real-time snapshot of all StudentPal activity.</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-card__head">
+              <div class="kpi-card__icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="users" class="icon-md"></i></div>
+              <span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+12%</span>
+            </div>
+            <p class="kpi-card__num" data-counter data-target="5200" data-suffix="">0</p>
+            <p class="kpi-card__label">Total Students</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card__head">
+              <div class="kpi-card__icon" style="background:var(--blue-soft);color:var(--blue)"><i data-lucide="files" class="icon-md"></i></div>
+              <span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+8%</span>
+            </div>
+            <p class="kpi-card__num" data-counter data-target="1480" data-suffix="">0</p>
+            <p class="kpi-card__label">Total Resources</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card__head">
+              <div class="kpi-card__icon" style="background:var(--green-soft);color:var(--green)"><i data-lucide="briefcase" class="icon-md"></i></div>
+              <span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+5%</span>
+            </div>
+            <p class="kpi-card__num" data-counter data-target="65" data-suffix="">0</p>
+            <p class="kpi-card__label">Active Opportunities</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card__head">
+              <div class="kpi-card__icon" style="background:var(--amber-soft);color:var(--amber)"><i data-lucide="megaphone" class="icon-md"></i></div>
+              <span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+3%</span>
+            </div>
+            <p class="kpi-card__num" data-counter data-target="124" data-suffix="">0</p>
+            <p class="kpi-card__label">Announcements</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card__head">
+              <div class="kpi-card__icon" style="background:var(--purple-soft);color:var(--purple)"><i data-lucide="message-circle" class="icon-md"></i></div>
+              <span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+22%</span>
+            </div>
+            <p class="kpi-card__num" data-counter data-target="8500" data-suffix="">0</p>
+            <p class="kpi-card__label">Community Posts</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card__head">
+              <div class="kpi-card__icon" style="background:var(--red-soft);color:var(--red)"><i data-lucide="flag" class="icon-md"></i></div>
+              <span class="kpi-card__trend kpi-card__trend--down"><i data-lucide="trending-down" class="icon-xs"></i>-2</span>
+            </div>
+            <p class="kpi-card__num" data-counter data-target="7" data-suffix="">0</p>
+            <p class="kpi-card__label">Pending Reports</p>
+          </div>
+        </div>
+
+        <!-- Activity + System Health -->
+        <div class="two-col" style="margin-bottom:var(--s6)">
+          <div class="panel">
+            <div class="panel__head">
+              <h2>Recent Activity</h2>
+              <span class="badge badge--green" style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite"></span>Live</span>
+            </div>
+            <div class="activity-list" id="activityList">
+              <div class="activity-item"><span class="activity-icon" style="background:var(--green-soft);color:var(--green)"><i data-lucide="user-plus" class="icon-xs"></i></span><div class="activity-body"><p><strong>Tobi Adebayo</strong> registered as a new student</p><p class="activity-time">2 minutes ago</p></div></div>
+              <div class="activity-item"><span class="activity-icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="upload" class="icon-xs"></i></span><div class="activity-body"><p><strong>CSC 201 — Data Structures</strong> notes uploaded by Faith O.</p><p class="activity-time">8 minutes ago</p></div></div>
+              <div class="activity-item"><span class="activity-icon" style="background:var(--amber-soft);color:var(--amber)"><i data-lucide="briefcase" class="icon-xs"></i></span><div class="activity-body"><p><strong>Andela Internship 2026</strong> opportunity posted</p><p class="activity-time">23 minutes ago</p></div></div>
+              <div class="activity-item"><span class="activity-icon" style="background:var(--red-soft);color:var(--red)"><i data-lucide="flag" class="icon-xs"></i></span><div class="activity-body"><p><strong>Community post</strong> reported for spam by 3 users</p><p class="activity-time">41 minutes ago</p></div></div>
+              <div class="activity-item"><span class="activity-icon" style="background:var(--blue-soft);color:var(--blue)"><i data-lucide="megaphone" class="icon-xs"></i></span><div class="activity-body"><p><strong>Exam Timetable</strong> announcement published</p><p class="activity-time">1 hour ago</p></div></div>
+              <div class="activity-item"><span class="activity-icon" style="background:var(--purple-soft);color:var(--purple)"><i data-lucide="user-plus" class="icon-xs"></i></span><div class="activity-body"><p><strong>David Okunade</strong> registered as a new student</p><p class="activity-time">2 hours ago</p></div></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head"><h2>System Health</h2><button class="btn btn--outline btn--sm" onclick="showToast('System health refreshed.','info')"><i data-lucide="refresh-cw" class="icon-xs"></i> Refresh</button></div>
+            <div class="health-grid">
+              <div class="health-card"><div class="health-card__head"><p class="health-card__name">API Server</p><span class="health-dot health-dot--up"></span></div><p class="health-val">99.9%</p><p class="health-sub">Uptime · Response: 42ms</p></div>
+              <div class="health-card"><div class="health-card__head"><p class="health-card__name">Database</p><span class="health-dot health-dot--up"></span></div><p class="health-val">Healthy</p><p class="health-sub">PythonAnywhere MySQL</p></div>
+              <div class="health-card"><div class="health-card__head"><p class="health-card__name">Storage</p><span class="health-dot health-dot--warn"></span></div><p class="health-val">78%</p><p class="health-sub">3.9 GB / 5 GB used</p><div class="progress-bar" style="margin-top:var(--s3)"><div class="progress-bar__fill" style="width:78%;background:var(--amber)"></div></div></div>
+              <div class="health-card"><div class="health-card__head"><p class="health-card__name">CDN / Netlify</p><span class="health-dot health-dot--up"></span></div><p class="health-val">Online</p><p class="health-sub">Frontend deployed</p></div>
+              <div class="health-card"><div class="health-card__head"><p class="health-card__name">Email SMTP</p><span class="health-dot health-dot--up"></span></div><p class="health-val">Active</p><p class="health-sub">Gmail relay connected</p></div>
+              <div class="health-card"><div class="health-card__head"><p class="health-card__name">JWT Auth</p><span class="health-dot health-dot--up"></span></div><p class="health-val">Secure</p><p class="health-sub">Blacklist: 0 tokens</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Resource Table -->
+        <div class="panel" style="margin-bottom:var(--s6)">
+          <div class="panel__head">
+            <h2>Latest Resources</h2>
+            <button class="btn btn--ghost" data-goto="resources"><i data-lucide="arrow-right" class="icon-xs"></i> View All</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Title</th><th>Dept.</th><th>Uploaded By</th><th>Date</th><th>Downloads</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td><strong>CSC 201 — Data Structures Past Questions</strong></td><td><span class="td-mono">CSC</span></td><td>Faith Olawale</td><td class="td-mono">Jun 21</td><td class="td-mono">342</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit" title="Edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>MTH 201 — Linear Algebra Notes</strong></td><td><span class="td-mono">MTH</span></td><td>Tobi Adebayo</td><td class="td-mono">Jun 20</td><td class="td-mono">218</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit" title="Edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>Introduction to Algorithms (CLRS)</strong></td><td><span class="td-mono">CSC</span></td><td>Admin</td><td class="td-mono">Jun 18</td><td class="td-mono">503</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit" title="Edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: ANALYTICS =================== -->
+      <section class="admin-page" id="page-analytics">
+        <div class="page-header-row">
+          <div><h1>Analytics</h1><p>Platform engagement, growth, and usage metrics.</p></div>
+          <select class="filter-sel" id="analyticsRange">
+            <option value="7">Last 7 days</option>
+            <option value="30" selected>Last 30 days</option>
+            <option value="90">Last 90 days</option>
+          </select>
+        </div>
+        <div class="kpi-grid" style="margin-bottom:var(--s7)">
+          <div class="kpi-card"><div class="kpi-card__head"><div class="kpi-card__icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="activity" class="icon-md"></i></div><span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+18%</span></div><p class="kpi-card__num">2,840</p><p class="kpi-card__label">Daily Active Users</p></div>
+          <div class="kpi-card"><div class="kpi-card__head"><div class="kpi-card__icon" style="background:var(--blue-soft);color:var(--blue)"><i data-lucide="download" class="icon-md"></i></div><span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+34%</span></div><p class="kpi-card__num">48.2k</p><p class="kpi-card__label">Resource Downloads</p></div>
+          <div class="kpi-card"><div class="kpi-card__head"><div class="kpi-card__icon" style="background:var(--green-soft);color:var(--green)"><i data-lucide="send" class="icon-md"></i></div><span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+9%</span></div><p class="kpi-card__num">1,230</p><p class="kpi-card__label">Opp. Applications</p></div>
+          <div class="kpi-card"><div class="kpi-card__head"><div class="kpi-card__icon" style="background:var(--purple-soft);color:var(--purple)"><i data-lucide="user-plus" class="icon-md"></i></div><span class="kpi-card__trend kpi-card__trend--up"><i data-lucide="trending-up" class="icon-xs"></i>+12%</span></div><p class="kpi-card__num">312</p><p class="kpi-card__label">New Registrations</p></div>
+        </div>
+        <div class="analytics-grid">
+          <div class="chart-panel"><div class="chart-panel__head"><div><p class="chart-panel__title">Daily Active Users</p><p class="chart-panel__sub">Unique logins per day</p></div><span class="chart-panel__stat" style="color:var(--cyan)">2,840</span></div><canvas id="chartDAU" height="200"></canvas></div>
+          <div class="chart-panel"><div class="chart-panel__head"><div><p class="chart-panel__title">Resource Downloads</p><p class="chart-panel__sub">Downloads over time</p></div><span class="chart-panel__stat" style="color:var(--blue)">48.2k</span></div><canvas id="chartDownloads" height="200"></canvas></div>
+          <div class="chart-panel"><div class="chart-panel__head"><div><p class="chart-panel__title">Opportunity Applications</p><p class="chart-panel__sub">Applications by type</p></div><span class="chart-panel__stat" style="color:var(--green)">1,230</span></div><canvas id="chartApps" height="200"></canvas></div>
+          <div class="chart-panel"><div class="chart-panel__head"><div><p class="chart-panel__title">New Registrations</p><p class="chart-panel__sub">Weekly growth</p></div><span class="chart-panel__stat" style="color:var(--purple)">312</span></div><canvas id="chartReg" height="200"></canvas></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: STUDENTS =================== -->
+      <section class="admin-page" id="page-students">
+        <div class="page-header-row">
+          <div><h1>Student Management</h1><p>View, search, filter and manage all registered students.</p></div>
+          <button class="btn btn--primary btn--sm" onclick="openModal('addStudentModal')"><i data-lucide="user-plus" class="icon-xs"></i> Add Student</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="users" class="icon-sm"></i></div><p class="stat-mini__num">5,200</p><p class="stat-mini__label">Total Students</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--green-soft);color:var(--green)"><i data-lucide="check-circle" class="icon-sm"></i></div><p class="stat-mini__num">5,108</p><p class="stat-mini__label">Active</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--amber-soft);color:var(--amber)"><i data-lucide="pause-circle" class="icon-sm"></i></div><p class="stat-mini__num">74</p><p class="stat-mini__label">Suspended</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--blue-soft);color:var(--blue)"><i data-lucide="graduation-cap" class="icon-sm"></i></div><p class="stat-mini__num">312</p><p class="stat-mini__label">New This Month</p></div>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="toolbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" id="studentSearch" placeholder="Search by name or matric number…" /></div>
+            <select class="filter-sel" id="studentDeptFilter"><option value="">All Departments</option><option>Computer Science</option><option>Cyber Security</option><option>Information Technology</option><option>Software Engineering</option><option>Mathematics</option><option>Physics</option><option>Economics</option></select>
+            <select class="filter-sel" id="studentLevelFilter"><option value="">All Levels</option><option value="100">100L</option><option value="200">200L</option><option value="300">300L</option><option value="400">400L</option></select>
+            <select class="filter-sel" id="studentStatusFilter"><option value="">All Status</option><option value="active">Active</option><option value="suspended">Suspended</option></select>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="studentTable">
+              <thead><tr><th><input type="checkbox" id="selectAll" style="width:15px;height:15px;cursor:pointer" /></th><th>Name</th><th>Matric No.</th><th>Department</th><th>Level</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+              <tbody id="studentTbody">
+                <tr data-dept="Computer Science" data-level="200" data-status="active"><td><input type="checkbox" style="width:15px;height:15px;cursor:pointer"></td><td><strong>Agbaje Peter</strong></td><td class="td-mono">201905001</td><td>Computer Science</td><td><span class="badge badge--neutral">200L</span></td><td><span class="badge badge--green">Active</span></td><td class="td-mono">Jun 2026</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--sus" title="Suspend"><i data-lucide="pause-circle" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'student')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr data-dept="Microbiology" data-level="200" data-status="active"><td><input type="checkbox" style="width:15px;height:15px;cursor:pointer"></td><td><strong>Faith Olawale</strong></td><td class="td-mono">201905042</td><td>Microbiology</td><td><span class="badge badge--neutral">200L</span></td><td><span class="badge badge--green">Active</span></td><td class="td-mono">Jun 2026</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--sus" title="Suspend"><i data-lucide="pause-circle" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'student')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr data-dept="Economics" data-level="400" data-status="active"><td><input type="checkbox" style="width:15px;height:15px;cursor:pointer"></td><td><strong>David Okunade</strong></td><td class="td-mono">201805088</td><td>Economics</td><td><span class="badge badge--neutral">400L</span></td><td><span class="badge badge--green">Active</span></td><td class="td-mono">May 2026</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--sus" title="Suspend"><i data-lucide="pause-circle" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'student')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr data-dept="Computer Science" data-level="300" data-status="active"><td><input type="checkbox" style="width:15px;height:15px;cursor:pointer"></td><td><strong>Tobi Adebayo</strong></td><td class="td-mono">201905124</td><td>Computer Science</td><td><span class="badge badge--neutral">300L</span></td><td><span class="badge badge--green">Active</span></td><td class="td-mono">Apr 2026</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--sus" title="Suspend"><i data-lucide="pause-circle" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'student')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr data-dept="Cyber Security" data-level="300" data-status="active"><td><input type="checkbox" style="width:15px;height:15px;cursor:pointer"></td><td><strong>Aisha Okonkwo</strong></td><td class="td-mono">201905208</td><td>Cyber Security</td><td><span class="badge badge--neutral">300L</span></td><td><span class="badge badge--green">Active</span></td><td class="td-mono">Mar 2026</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--sus" title="Suspend"><i data-lucide="pause-circle" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'student')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr data-dept="Software Engineering" data-level="400" data-status="suspended"><td><input type="checkbox" style="width:15px;height:15px;cursor:pointer"></td><td><strong>Kunle Adeyemi</strong></td><td class="td-mono">201805301</td><td>Software Engineering</td><td><span class="badge badge--neutral">400L</span></td><td><span class="badge badge--amber">Suspended</span></td><td class="td-mono">Feb 2026</td><td><div class="td-actions"><button class="btn-icon btn-icon--view" title="View"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--sus" title="Unsuspend" style="background:var(--green-soft);color:var(--green)"><i data-lucide="play-circle" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" title="Delete" onclick="confirmDelete(this,'student')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination"><p class="pagination-info">Showing 6 of 5,200 students</p><div class="pagination-btns"><button class="page-btn" disabled><i data-lucide="chevron-left" class="icon-xs"></i></button><button class="page-btn is-active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><span style="align-self:center;color:var(--text-f)">…</span><button class="page-btn">260</button><button class="page-btn"><i data-lucide="chevron-right" class="icon-xs"></i></button></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: RESOURCES =================== -->
+      <section class="admin-page" id="page-resources">
+        <div class="page-header-row">
+          <div><h1>Resource Management</h1><p>Upload, edit, and manage all academic materials.</p></div>
+          <button class="btn btn--primary btn--sm" onclick="openModal('uploadResourceModal')"><i data-lucide="upload" class="icon-xs"></i> Upload Resource</button>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="toolbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" placeholder="Search resources…" /></div>
+            <select class="filter-sel"><option>All Departments</option><option>Computer Science</option><option>Mathematics</option><option>Physics</option><option>Economics</option></select>
+            <select class="filter-sel"><option>All Types</option><option>Past Questions</option><option>Lecture Notes</option><option>Handout</option><option>E-book</option></select>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Title</th><th>Type</th><th>Department</th><th>Uploaded By</th><th>Date</th><th>Downloads</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td><strong>CSC 201 — Data Structures Past Questions</strong></td><td><span class="badge badge--red">Past Q.</span></td><td><span class="td-mono">CSC</span></td><td>Faith Olawale</td><td class="td-mono">Jun 21, 2026</td><td class="td-mono">342</td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>MTH 201 — Linear Algebra Complete Notes</strong></td><td><span class="badge badge--blue">Notes</span></td><td><span class="td-mono">MTH</span></td><td>Tobi Adebayo</td><td class="td-mono">Jun 20, 2026</td><td class="td-mono">218</td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>Introduction to Algorithms (CLRS, 4th Ed.)</strong></td><td><span class="badge badge--green">E-book</span></td><td><span class="td-mono">CSC</span></td><td>Admin</td><td class="td-mono">Apr 15, 2026</td><td class="td-mono">503</td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>GST 202 — Logic &amp; Philosophy Handout</strong></td><td><span class="badge badge--amber">Handout</span></td><td><span class="td-mono">GST</span></td><td>Mrs. Ngozi I.</td><td class="td-mono">Jun 1, 2026</td><td class="td-mono">156</td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>PHY 101 — Mechanics Past Questions</strong></td><td><span class="badge badge--red">Past Q.</span></td><td><span class="td-mono">PHY</span></td><td>Dr. Adeleke R.</td><td class="td-mono">May 28, 2026</td><td class="td-mono">176</td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'resource')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination"><p class="pagination-info">Showing 5 of 1,480 resources</p><div class="pagination-btns"><button class="page-btn" disabled><i data-lucide="chevron-left" class="icon-xs"></i></button><button class="page-btn is-active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><span style="align-self:center;color:var(--text-f)">…</span><button class="page-btn">296</button><button class="page-btn"><i data-lucide="chevron-right" class="icon-xs"></i></button></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: ANNOUNCEMENTS =================== -->
+      <section class="admin-page" id="page-announcements">
+        <div class="page-header-row">
+          <div><h1>Announcement Management</h1><p>Create and manage platform-wide announcements.</p></div>
+          <button class="btn btn--primary btn--sm" onclick="openModal('createAnnounceModal')"><i data-lucide="plus" class="icon-xs"></i> Create Announcement</button>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="toolbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" placeholder="Search announcements…" /></div>
+            <select class="filter-sel"><option>All Categories</option><option>General</option><option>Faculty</option><option>Department</option><option>Urgent</option></select>
+            <select class="filter-sel"><option>All Status</option><option>Published</option><option>Draft</option></select>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Title</th><th>Category</th><th>Audience</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Late Registration Deadline Extended to June 30</strong></td><td><span class="badge badge--red">Urgent</span></td><td>All Students</td><td class="td-mono">Jun 14, 2026</td><td><span class="badge badge--green">Published</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'announcement')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>CSC Department Updates Course Registration Portal</strong></td><td><span class="badge badge--cyan">Department</span></td><td>Computer Science</td><td class="td-mono">Jun 17, 2026</td><td><span class="badge badge--green">Published</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'announcement')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>AAUA Wins National Robotics Challenge 2026</strong></td><td><span class="badge badge--blue">General</span></td><td>All Students</td><td class="td-mono">Jun 18, 2026</td><td><span class="badge badge--green">Published</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'announcement')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>Second Semester Exam Timetable — Faculty of Science</strong></td><td><span class="badge badge--amber">Faculty</span></td><td>Faculty of Science</td><td class="td-mono">Jun 15, 2026</td><td><span class="badge badge--green">Published</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'announcement')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><strong>New Semester Hostel Allocation Guidelines</strong></td><td><span class="badge badge--blue">General</span></td><td>All Students</td><td class="td-mono">Jun 19, 2026</td><td><span class="badge badge--neutral">Draft</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--pub" title="Publish"><i data-lucide="send" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'announcement')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination"><p class="pagination-info">Showing 5 of 124 announcements</p><div class="pagination-btns"><button class="page-btn" disabled><i data-lucide="chevron-left" class="icon-xs"></i></button><button class="page-btn is-active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn"><i data-lucide="chevron-right" class="icon-xs"></i></button></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: OPPORTUNITIES =================== -->
+      <section class="admin-page" id="page-opportunities">
+        <div class="page-header-row">
+          <div><h1>Opportunity Management</h1><p>Manage scholarships, internships, and competitions.</p></div>
+          <button class="btn btn--primary btn--sm" onclick="openModal('createOppModal')"><i data-lucide="plus" class="icon-xs"></i> Create Opportunity</button>
+        </div>
+        <div class="tab-pills" id="oppTabs">
+          <button class="tab-pill is-active" data-opp-filter="all">All (8)</button>
+          <button class="tab-pill" data-opp-filter="scholarship">Scholarships (3)</button>
+          <button class="tab-pill" data-opp-filter="internship">Internships (2)</button>
+          <button class="tab-pill" data-opp-filter="competition">Competitions (2)</button>
+          <button class="tab-pill" data-opp-filter="ambassador">Ambassador (1)</button>
+        </div>
+        <div class="opp-mgmt-grid" id="oppGrid">
+          <div class="opp-mgmt-card" data-opp-type="scholarship"><div class="opp-mgmt-card__top"><div class="opp-icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="award" class="icon-md"></i></div><span class="badge badge--red">Closing Soon</span></div><span class="badge badge--cyan" style="align-self:flex-start;margin-bottom:var(--s3)">Scholarship</span><h3 class="opp-mgmt-card__title">MTN Foundation STEM Scholarship</h3><p class="opp-mgmt-card__desc">Full tuition for 200L–400L STEM students with CGPA above 4.0.</p><div class="opp-mgmt-card__foot"><span class="opp-deadline"><i data-lucide="clock" class="icon-xs"></i>Jun 23, 2026</span><div style="display:flex;gap:var(--s2)"><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'opportunity')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></div></div>
+          <div class="opp-mgmt-card" data-opp-type="internship"><div class="opp-mgmt-card__top"><div class="opp-icon" style="background:var(--blue-soft);color:var(--blue)"><i data-lucide="code-2" class="icon-md"></i></div><span class="badge badge--green">Open</span></div><span class="badge badge--blue" style="align-self:flex-start;margin-bottom:var(--s3)">Internship</span><h3 class="opp-mgmt-card__title">Andela Frontend Engineering Internship</h3><p class="opp-mgmt-card__desc">3-month remote internship for React/Vue.js experienced students.</p><div class="opp-mgmt-card__foot"><span class="opp-deadline"><i data-lucide="clock" class="icon-xs"></i>Jul 4, 2026</span><div style="display:flex;gap:var(--s2)"><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'opportunity')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></div></div>
+          <div class="opp-mgmt-card" data-opp-type="competition"><div class="opp-mgmt-card__top"><div class="opp-icon" style="background:var(--green-soft);color:var(--green)"><i data-lucide="zap" class="icon-md"></i></div><span class="badge badge--red">Closing Soon</span></div><span class="badge badge--green" style="align-self:flex-start;margin-bottom:var(--s3)">Competition</span><h3 class="opp-mgmt-card__title">AAUA Hackathon 2026</h3><p class="opp-mgmt-card__desc">48-hour campus hackathon. ₦500,000 prize pool. Teams of 2–4.</p><div class="opp-mgmt-card__foot"><span class="opp-deadline"><i data-lucide="clock" class="icon-xs"></i>Jun 24, 2026</span><div style="display:flex;gap:var(--s2)"><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'opportunity')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></div></div>
+          <div class="opp-mgmt-card" data-opp-type="ambassador"><div class="opp-mgmt-card__top"><div class="opp-icon" style="background:var(--amber-soft);color:var(--amber)"><i data-lucide="globe" class="icon-md"></i></div><span class="badge badge--green">Open</span></div><span class="badge badge--amber" style="align-self:flex-start;margin-bottom:var(--s3)">Ambassador</span><h3 class="opp-mgmt-card__title">Google Developer Student Club Lead</h3><p class="opp-mgmt-card__desc">Lead GDSC at AAUA for 2026/2027 academic session.</p><div class="opp-mgmt-card__foot"><span class="opp-deadline"><i data-lucide="clock" class="icon-xs"></i>Jul 9, 2026</span><div style="display:flex;gap:var(--s2)"><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'opportunity')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></div></div>
+          <div class="opp-mgmt-card" data-opp-type="scholarship"><div class="opp-mgmt-card__top"><div class="opp-icon" style="background:var(--purple-soft);color:var(--purple)"><i data-lucide="graduation-cap" class="icon-md"></i></div><span class="badge badge--neutral">Applied</span></div><span class="badge badge--cyan" style="align-self:flex-start;margin-bottom:var(--s3)">Scholarship</span><h3 class="opp-mgmt-card__title">ASUU Merit Scholarship 2026</h3><p class="opp-mgmt-card__desc">Academic excellence scholarship for CGPA 4.5+ students.</p><div class="opp-mgmt-card__foot"><span class="opp-deadline"><i data-lucide="users" class="icon-xs"></i>43 applicants</span><div style="display:flex;gap:var(--s2)"><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'opportunity')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></div></div>
+          <div class="opp-mgmt-card" data-opp-type="internship"><div class="opp-mgmt-card__top"><div class="opp-icon" style="background:var(--red-soft);color:var(--red)"><i data-lucide="server" class="icon-md"></i></div><span class="badge badge--green">Open</span></div><span class="badge badge--blue" style="align-self:flex-start;margin-bottom:var(--s3)">Internship</span><h3 class="opp-mgmt-card__title">Flutterwave Backend Engineering Intern</h3><p class="opp-mgmt-card__desc">4-month internship focused on payment APIs and backend systems.</p><div class="opp-mgmt-card__foot"><span class="opp-deadline"><i data-lucide="clock" class="icon-xs"></i>Jul 12, 2026</span><div style="display:flex;gap:var(--s2)"><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'opportunity')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: COMMUNITY =================== -->
+      <section class="admin-page" id="page-community">
+        <div class="page-header"><h1>Community Management</h1><p>Monitor posts, review reports, and moderate the student community.</p></div>
+        <div class="stats-row">
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--purple-soft);color:var(--purple)"><i data-lucide="message-circle" class="icon-sm"></i></div><p class="stat-mini__num">8,500</p><p class="stat-mini__label">Total Posts</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--red-soft);color:var(--red)"><i data-lucide="flag" class="icon-sm"></i></div><p class="stat-mini__num">7</p><p class="stat-mini__label">Reported</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--amber-soft);color:var(--amber)"><i data-lucide="alert-octagon" class="icon-sm"></i></div><p class="stat-mini__num">3</p><p class="stat-mini__label">Spam</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="users" class="icon-sm"></i></div><p class="stat-mini__num">127</p><p class="stat-mini__label">Active Now</p></div>
+        </div>
+        <div class="tab-pills" id="communityTabs">
+          <button class="tab-pill is-active" data-com-filter="all">All Reports (7)</button>
+          <button class="tab-pill" data-com-filter="spam">Spam (3)</button>
+          <button class="tab-pill" data-com-filter="abuse">Abuse (2)</button>
+          <button class="tab-pill" data-com-filter="inappropriate">Inappropriate (2)</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--s4)" id="reportGrid">
+          <div class="report-card report-card--urgent" data-com-type="abuse"><div class="report-card__head"><div class="report-card__author"><div class="admin-avatar admin-avatar--sm">DK</div><div><p class="report-card__author-name">David Okunade</p><p class="report-card__author-dept">Economics · 400L</p></div></div><span class="badge badge--red">Abuse</span></div><p class="report-card__body">"Anyone who uploads fake notes should be expelled. This is a useless platform for useless people who can't…" [content continues]</p><div class="report-card__foot"><div class="report-meta"><i data-lucide="flag" class="icon-xs"></i>Reported by 3 users<i data-lucide="clock" class="icon-xs" style="margin-left:8px"></i>2 hours ago</div><div style="display:flex;gap:var(--s2)"><button class="btn btn--outline btn--xs" onclick="showToast('Post approved and reports dismissed.','success')"><i data-lucide="check" class="icon-xs"></i>Approve</button><button class="btn btn--danger btn--xs" onclick="confirmDelete(this,'post')"><i data-lucide="trash-2" class="icon-xs"></i>Delete</button><button class="btn btn--outline btn--xs" style="border-color:var(--amber);color:var(--amber)" onclick="showToast('Warning sent to user.','info')"><i data-lucide="alert-triangle" class="icon-xs"></i>Warn</button></div></div></div>
+          <div class="report-card" data-com-type="spam"><div class="report-card__head"><div class="report-card__author"><div class="admin-avatar admin-avatar--sm" style="background:linear-gradient(135deg,#d97706,#dc2626)">XX</div><div><p class="report-card__author-name">Unknown User</p><p class="report-card__author-dept">Unverified account</p></div></div><span class="badge badge--amber">Spam</span></div><p class="report-card__body">"MAKE MONEY ONLINE!! WhatsApp +234 900 000 0000 to earn ₦50,000 daily from your phone…"</p><div class="report-card__foot"><div class="report-meta"><i data-lucide="flag" class="icon-xs"></i>Reported by 5 users<i data-lucide="clock" class="icon-xs" style="margin-left:8px"></i>1 hour ago</div><div style="display:flex;gap:var(--s2)"><button class="btn btn--danger btn--xs" onclick="confirmDelete(this,'post')"><i data-lucide="trash-2" class="icon-xs"></i>Delete</button><button class="btn btn--outline btn--xs" style="border-color:var(--amber);color:var(--amber)" onclick="showToast('Warning sent to user.','info')"><i data-lucide="alert-triangle" class="icon-xs"></i>Warn User</button></div></div></div>
+          <div class="report-card" data-com-type="inappropriate"><div class="report-card__head"><div class="report-card__author"><div class="admin-avatar admin-avatar--sm" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">KA</div><div><p class="report-card__author-name">Kunle Adeyemi</p><p class="report-card__author-dept">Software Engineering · 400L</p></div></div><span class="badge badge--purple">Inappropriate</span></div><p class="report-card__body">"Nobody in this department actually helps each other. You people are always forming big boy for nothing…"</p><div class="report-card__foot"><div class="report-meta"><i data-lucide="flag" class="icon-xs"></i>Reported by 1 user<i data-lucide="clock" class="icon-xs" style="margin-left:8px"></i>4 hours ago</div><div style="display:flex;gap:var(--s2)"><button class="btn btn--outline btn--xs" onclick="showToast('Post approved and reports dismissed.','success')"><i data-lucide="check" class="icon-xs"></i>Approve</button><button class="btn btn--danger btn--xs" onclick="confirmDelete(this,'post')"><i data-lucide="trash-2" class="icon-xs"></i>Delete</button><button class="btn btn--outline btn--xs" style="border-color:var(--amber);color:var(--amber)" onclick="showToast('Warning sent to user.','info')"><i data-lucide="alert-triangle" class="icon-xs"></i>Warn</button></div></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: ASSIGNMENTS =================== -->
+      <section class="admin-page" id="page-assignments">
+        <div class="page-header-row">
+          <div><h1>Assignment Management</h1><p>Monitor all student assignments and submission status across departments.</p></div>
+          <button class="btn btn--primary btn--sm" onclick="openModal('createAssignModal')"><i data-lucide="plus" class="icon-xs"></i> Create Assignment</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--cyan-soft);color:var(--cyan)"><i data-lucide="clipboard-list" class="icon-sm"></i></div><p class="stat-mini__num">248</p><p class="stat-mini__label">Total Assignments</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--amber-soft);color:var(--amber)"><i data-lucide="clock" class="icon-sm"></i></div><p class="stat-mini__num">64</p><p class="stat-mini__label">Pending</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--green-soft);color:var(--green)"><i data-lucide="check-circle" class="icon-sm"></i></div><p class="stat-mini__num">172</p><p class="stat-mini__label">Submitted</p></div>
+          <div class="stat-mini"><div class="stat-mini__icon" style="background:var(--red-soft);color:var(--red)"><i data-lucide="alert-circle" class="icon-sm"></i></div><p class="stat-mini__num">12</p><p class="stat-mini__label">Overdue</p></div>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="toolbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" placeholder="Search assignments…" /></div>
+            <select class="filter-sel"><option>All Courses</option><option>CSC 201</option><option>MTH 201</option><option>PHY 101</option><option>GST 202</option></select>
+            <select class="filter-sel"><option>All Status</option><option>Pending</option><option>Submitted</option><option>Overdue</option></select>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Course</th><th>Assignment Title</th><th>Lecturer</th><th>Due Date</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td><span class="td-mono">CSC 201</span></td><td><strong>Implement a Linked List in C</strong></td><td>Dr. Funmilayo O.</td><td class="td-mono">Jun 24, 2026</td><td class="td-mono">38/200</td><td><span class="badge badge--amber">Pending</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'assignment')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><span class="td-mono">MTH 201</span></td><td><strong>Matrix Operations Problem Set</strong></td><td>Prof. Adewale B.</td><td class="td-mono">Jun 26, 2026</td><td class="td-mono">14/180</td><td><span class="badge badge--amber">Pending</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'assignment')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><span class="td-mono">PHY 101</span></td><td><strong>Mechanics Problem Set Ch. 4&amp;5</strong></td><td>Dr. Adeleke R.</td><td class="td-mono">Jun 18, 2026</td><td class="td-mono">140/155</td><td><span class="badge badge--red">Overdue</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'assignment')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+                <tr><td><span class="td-mono">CSC 201</span></td><td><strong>Binary Search Tree — Lab 2</strong></td><td>Dr. Funmilayo O.</td><td class="td-mono">Jun 12, 2026</td><td class="td-mono">196/200</td><td><span class="badge badge--green">Closed</span></td><td><div class="td-actions"><button class="btn-icon btn-icon--view"><i data-lucide="eye" class="icon-xs"></i></button><button class="btn-icon btn-icon--edit"><i data-lucide="pencil" class="icon-xs"></i></button><button class="btn-icon btn-icon--del" onclick="confirmDelete(this,'assignment')"><i data-lucide="trash-2" class="icon-xs"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination"><p class="pagination-info">Showing 4 of 248 assignments</p><div class="pagination-btns"><button class="page-btn" disabled><i data-lucide="chevron-left" class="icon-xs"></i></button><button class="page-btn is-active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn"><i data-lucide="chevron-right" class="icon-xs"></i></button></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: CALENDAR =================== -->
+      <section class="admin-page" id="page-calendar">
+        <div class="page-header-row">
+          <div><h1>Academic Calendar</h1><p>Manage events, deadlines, exams, and school activities.</p></div>
+          <button class="btn btn--primary btn--sm" onclick="openModal('createEventModal')"><i data-lucide="plus" class="icon-xs"></i> Add Event</button>
+        </div>
+        <div class="two-col" style="align-items:start">
+          <div class="panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s5)">
+              <h2 id="calLabel">July 2026</h2>
+              <div style="display:flex;gap:var(--s2)">
+                <button id="calPrev" style="width:32px;height:32px;border:1px solid var(--border);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;background:var(--surface);color:var(--text-m);cursor:pointer;transition:var(--t-theme)"><i data-lucide="chevron-left" class="icon-sm"></i></button>
+                <button id="calNext" style="width:32px;height:32px;border:1px solid var(--border);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;background:var(--surface);color:var(--text-m);cursor:pointer;transition:var(--t-theme)"><i data-lucide="chevron-right" class="icon-sm"></i></button>
+              </div>
+            </div>
+            <div class="table-wrap"><table class="cal-grid" style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Sun</th><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Mon</th><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Tue</th><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Wed</th><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Thu</th><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Fri</th><th style="text-align:center;padding:var(--s2);font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-f)">Sat</th></tr></thead><tbody id="adminCalBody"></tbody></table></div>
+          </div>
+          <div class="panel"><div class="panel__head"><h2>Upcoming Events</h2></div><div style="display:flex;flex-direction:column;gap:var(--s3)"><div style="display:flex;gap:var(--s3);padding:var(--s3);background:var(--red-soft);border-radius:var(--r-md)"><span style="width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:5px"></span><div><p style="font-family:var(--mono);font-size:.68rem;color:var(--text-f)">Jun 30, 2026</p><p style="font-size:.88rem;font-weight:600">Registration Deadline</p></div></div><div style="display:flex;gap:var(--s3);padding:var(--s3);background:var(--cyan-soft);border-radius:var(--r-md)"><span style="width:10px;height:10px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:5px"></span><div><p style="font-family:var(--mono);font-size:.68rem;color:var(--text-f)">Jul 3, 2026</p><p style="font-size:.88rem;font-weight:600">CSC 201 CA Test</p></div></div><div style="display:flex;gap:var(--s3);padding:var(--s3);background:var(--amber-soft);border-radius:var(--r-md)"><span style="width:10px;height:10px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:5px"></span><div><p style="font-family:var(--mono);font-size:.68rem;color:var(--text-f)">Jul 5, 2026</p><p style="font-size:.88rem;font-weight:600">MTH 201 Assignment Due</p></div></div><div style="display:flex;gap:var(--s3);padding:var(--s3);background:var(--red-soft);border-radius:var(--r-md)"><span style="width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:5px"></span><div><p style="font-family:var(--mono);font-size:.68rem;color:var(--text-f)">Jul 14, 2026</p><p style="font-size:.88rem;font-weight:600">Second Semester Exams Begin</p></div></div><div style="display:flex;gap:var(--s3);padding:var(--s3);background:var(--purple-soft);border-radius:var(--r-md)"><span style="width:10px;height:10px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:5px"></span><div><p style="font-family:var(--mono);font-size:.68rem;color:var(--text-f)">Jul 20, 2026</p><p style="font-size:.88rem;font-weight:600">Faculty Annual Dinner</p></div></div><div style="display:flex;gap:var(--s3);padding:var(--s3);background:var(--green-soft);border-radius:var(--r-md)"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px"></span><div><p style="font-family:var(--mono);font-size:.68rem;color:var(--text-f)">Jul 28, 2026</p><p style="font-size:.88rem;font-weight:600">Semester Break Begins</p></div></div></div></div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: AI MANAGER =================== -->
+      <section class="admin-page" id="page-ai">
+        <div class="page-header"><h1>AI Resource Manager</h1><p>Manage StudentPal's AI-powered resource indexing and search intelligence.</p></div>
+        <div class="ai-grid">
+          <div class="ai-stat"><div class="ai-stat__icon">📚</div><p class="ai-stat__num">1,480</p><p class="ai-stat__label">Resources Indexed</p></div>
+          <div class="ai-stat"><div class="ai-stat__icon">🔄</div><p class="ai-stat__num">Jun 21</p><p class="ai-stat__label">Last AI Update</p></div>
+          <div class="ai-stat"><div class="ai-stat__icon">🎯</div><p class="ai-stat__num">94.2%</p><p class="ai-stat__label">Search Accuracy</p></div>
+          <div class="ai-stat"><div class="ai-stat__icon">⚡</div><p class="ai-stat__num">38ms</p><p class="ai-stat__label">Avg. Query Time</p></div>
+        </div>
+        <div class="ai-actions">
+          <button class="btn btn--primary" id="reindexBtn" onclick="runAiTask('reindex')"><i data-lucide="refresh-cw" class="icon-sm"></i> Re-index All Resources</button>
+          <button class="btn btn--outline" id="embedBtn" onclick="runAiTask('embed')"><i data-lucide="cpu" class="icon-sm"></i> Generate Resource Embeddings</button>
+          <button class="btn btn--outline" onclick="runAiTask('test')"><i data-lucide="search" class="icon-sm"></i> Test Search Pipeline</button>
+          <button class="btn btn--outline" onclick="runAiTask('clear')"><i data-lucide="trash-2" class="icon-sm"></i> Clear Index Cache</button>
+        </div>
+        <div class="panel" style="margin-bottom:var(--s6)">
+          <div class="panel__head"><h2>Index Status</h2><span class="badge badge--green" style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite"></span>Healthy</span></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--s5);margin-bottom:var(--s6)">
+            <div class="health-card"><div class="health-card__head"><p class="health-card__name">CSC Resources</p><span class="health-dot health-dot--up"></span></div><p class="health-val">412</p><p class="health-sub">Indexed · 100%</p><div class="progress-bar"><div class="progress-bar__fill" style="width:100%;background:var(--green)"></div></div></div>
+            <div class="health-card"><div class="health-card__head"><p class="health-card__name">MTH Resources</p><span class="health-dot health-dot--up"></span></div><p class="health-val">284</p><p class="health-sub">Indexed · 100%</p><div class="progress-bar"><div class="progress-bar__fill" style="width:100%;background:var(--green)"></div></div></div>
+            <div class="health-card"><div class="health-card__head"><p class="health-card__name">PHY Resources</p><span class="health-dot health-dot--up"></span></div><p class="health-val">198</p><p class="health-sub">Indexed · 98%</p><div class="progress-bar"><div class="progress-bar__fill" style="width:98%;background:var(--cyan)"></div></div></div>
+            <div class="health-card"><div class="health-card__head"><p class="health-card__name">Other Depts.</p><span class="health-dot health-dot--warn"></span></div><p class="health-val">586</p><p class="health-sub">Indexed · 84%</p><div class="progress-bar"><div class="progress-bar__fill" style="width:84%;background:var(--amber)"></div></div></div>
+          </div>
+          <p style="font-size:.82rem;font-weight:600;margin-bottom:var(--s3)">System Log</p>
+          <div class="ai-log" id="aiLog">
+            <p>[2026-06-21 10:02:14] Index health check completed — 1,480 documents verified.</p>
+            <p>[2026-06-21 09:45:00] Embedding generation complete for 12 new resources.</p>
+            <p>[2026-06-21 08:30:22] Re-index triggered by SP-ADMIN-001.</p>
+            <p>[2026-06-20 23:00:00] Scheduled nightly index refresh completed successfully.</p>
+            <p>[2026-06-20 14:22:10] Search accuracy recalibrated to 94.2%.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== PAGE: SETTINGS =================== -->
+      <section class="admin-page" id="page-settings">
+        <div class="page-header"><h1>Settings</h1><p>Manage your admin profile, security, and platform preferences.</p></div>
+        <div class="settings-layout">
+          <!-- Profile -->
+          <div class="settings-panel">
+            <div class="settings-panel__head"><h2>Profile Settings</h2><p>Update your admin account details.</p></div>
+            <div class="settings-panel__body">
+              <div class="avatar-zone">
+                <div class="admin-avatar" style="width:68px;height:68px;font-size:1.3rem">SA</div>
+                <div><button class="btn btn--outline btn--sm"><i data-lucide="upload" class="icon-xs"></i>Upload Photo</button><p class="avatar-zone__hint">JPG or PNG, max 2MB</p></div>
+              </div>
+              <form id="profileForm" novalidate>
+                <div class="settings-grid" style="gap:var(--s5)">
+                  <div class="settings-field"><label>First Name</label><input type="text" value="Super" /></div>
+                  <div class="settings-field"><label>Last Name</label><input type="text" value="Admin" /></div>
+                  <div class="settings-field"><label>Email Address</label><input type="email" value="admin@studentpal.app" /></div>
+                  <div class="settings-field"><label>Admin ID</label><input type="text" value="SP-ADMIN-001" readonly style="opacity:.7;cursor:not-allowed" /></div>
+                </div>
+                <div style="margin-top:var(--s5)"><button type="button" class="btn btn--primary btn--sm" onclick="showToast('Profile updated successfully.','success')"><i data-lucide="save" class="icon-xs"></i>Save Profile</button></div>
+              </form>
+            </div>
+          </div>
+          <!-- Security -->
+          <div class="settings-panel">
+            <div class="settings-panel__head"><h2>Security Settings</h2><p>Manage your password and two-factor authentication.</p></div>
+            <div class="settings-panel__body">
+              <div class="settings-grid">
+                <div class="settings-field" style="grid-column:1/-1"><label>Current Password</label><input type="password" placeholder="••••••••" /></div>
+                <div class="settings-field"><label>New Password</label><input type="password" placeholder="Min. 8 characters" /></div>
+                <div class="settings-field"><label>Confirm Password</label><input type="password" placeholder="Repeat password" /></div>
+              </div>
+              <button class="btn btn--primary btn--sm" onclick="showToast('Password updated successfully.','success')"><i data-lucide="lock" class="icon-xs"></i>Update Password</button>
+              <div>
+                <div class="toggle-row"><div class="toggle-row__label"><h3>Two-Factor Authentication</h3><p>Add an extra security layer via email OTP.</p></div><label class="toggle" aria-label="Enable 2FA"><input type="checkbox" checked /><span class="toggle-track"></span></label></div>
+                <div class="toggle-row"><div class="toggle-row__label"><h3>Admin Secret Key</h3><p>Rotate the admin portal access key.</p></div><button class="btn btn--outline btn--sm" onclick="showToast('New secret key generated. Update your .env file.','info')"><i data-lucide="rotate-ccw" class="icon-xs"></i>Rotate</button></div>
+              </div>
+            </div>
+          </div>
+          <!-- Theme -->
+          <div class="settings-panel">
+            <div class="settings-panel__head"><h2>Appearance</h2><p>Customise the admin dashboard theme.</p></div>
+            <div class="settings-panel__body">
+              <div><p style="font-size:.84rem;font-weight:600;margin-bottom:var(--s4)">Theme</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)">
+                  <div id="themeLightCard" onclick="setTheme('light')" style="border:2px solid var(--border);border-radius:var(--r-md);padding:var(--s4);cursor:pointer;display:flex;align-items:center;gap:var(--s3);transition:var(--t-theme),border-color var(--t)"><div style="width:40px;height:28px;border-radius:6px;background:#f8fafc;border:1px solid var(--border);overflow:hidden;flex-shrink:0"><div style="height:8px;margin:4px;border-radius:2px;background:#e2e8f0"></div><div style="height:5px;width:50%;margin:3px 4px;border-radius:2px;background:#06b6d4"></div></div><span style="font-size:.84rem;font-weight:600">☀️ Light</span></div>
+                  <div id="themeDarkCard" onclick="setTheme('dark')" style="border:2px solid var(--border);border-radius:var(--r-md);padding:var(--s4);cursor:pointer;display:flex;align-items:center;gap:var(--s3);transition:var(--t-theme),border-color var(--t)"><div style="width:40px;height:28px;border-radius:6px;background:#0f1520;border:1px solid #1e293b;overflow:hidden;flex-shrink:0"><div style="height:8px;margin:4px;border-radius:2px;background:#1e293b"></div><div style="height:5px;width:50%;margin:3px 4px;border-radius:2px;background:#06b6d4"></div></div><span style="font-size:.84rem;font-weight:600">🌙 Dark</span></div>
+                </div>
+              </div>
+              <div><div class="toggle-row"><div class="toggle-row__label"><h3>Compact Sidebar</h3><p>Show icon-only sidebar to maximise content space.</p></div><label class="toggle"><input type="checkbox" /><span class="toggle-track"></span></label></div></div>
+            </div>
+          </div>
+          <!-- Notifications -->
+          <div class="settings-panel">
+            <div class="settings-panel__head"><h2>Notifications</h2><p>Control which admin alerts you receive.</p></div>
+            <div class="settings-panel__body">
+              <div class="toggle-row"><div class="toggle-row__label"><h3>New Student Registrations</h3><p>Alert when a new student joins the platform.</p></div><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label></div>
+              <div class="toggle-row"><div class="toggle-row__label"><h3>Content Reports</h3><p>Alert when community content is reported.</p></div><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label></div>
+              <div class="toggle-row"><div class="toggle-row__label"><h3>System Alerts</h3><p>Storage and API health warnings.</p></div><label class="toggle"><input type="checkbox" checked /><span class="toggle-track"></span></label></div>
+              <div class="toggle-row"><div class="toggle-row__label"><h3>Weekly Analytics Report</h3><p>Email digest of platform analytics every Monday.</p></div><label class="toggle"><input type="checkbox" /><span class="toggle-track"></span></label></div>
+            </div>
+          </div>
+          <!-- Danger Zone -->
+          <div class="settings-panel" style="border-color:var(--red-soft)">
+            <div class="settings-panel__head"><h2 style="color:var(--red)">Danger Zone</h2><p>Irreversible actions — proceed with extreme caution.</p></div>
+            <div class="settings-panel__body">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s4)"><div><h3 style="font-size:.88rem;font-weight:600">Log Out Admin Session</h3><p style="font-size:.78rem;color:var(--text-f);margin-top:2px">End your current admin session securely.</p></div><a href="login.html" class="btn btn--outline btn--sm"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s4);padding-top:var(--s5);border-top:1px solid var(--red-soft)"><div><h3 style="font-size:.88rem;font-weight:600;color:var(--red)">Reset All Student Data</h3><p style="font-size:.78rem;color:var(--text-f);margin-top:2px">Wipe all student records. This cannot be undone.</p></div><button class="btn btn--danger btn--sm" onclick="if(confirm('This will permanently delete all student data. Are you absolutely sure?'))showToast('Action blocked. Contact system architect.','error')"><i data-lucide="alert-triangle" class="icon-xs"></i>Reset Data</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ======================== MODALS ======================== -->
+<!-- Delete Confirm -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal"><div class="modal-head"><h3 id="deleteModalTitle">Delete Resource</h3><button class="modal-close" onclick="closeModal('deleteModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><p style="color:var(--text-m);font-size:.9rem">This action is permanent and cannot be undone. Are you sure you want to delete this item?</p></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('deleteModal')">Cancel</button><button class="btn btn--danger" id="deleteConfirmBtn">Delete</button></div></div>
+</div>
+
+<!-- Upload Resource -->
+<div class="modal-overlay" id="uploadResourceModal">
+  <div class="modal"><div class="modal-head"><h3>Upload Resource</h3><button class="modal-close" onclick="closeModal('uploadResourceModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-grid"><div class="modal-field"><label>Course Code</label><input type="text" placeholder="e.g. CSC 201" /></div><div class="modal-field"><label>Resource Type</label><select><option>Past Questions</option><option>Lecture Notes</option><option>Handout</option><option>E-book</option></select></div></div><div class="modal-field"><label>Title</label><input type="text" placeholder="Resource title…" /></div><div class="modal-grid"><div class="modal-field"><label>Department</label><select><option>Computer Science</option><option>Mathematics</option><option>Physics</option><option>Economics</option></select></div><div class="modal-field"><label>Level</label><select><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select></div></div><div class="modal-field"><label>File</label><input type="file" accept=".pdf,.docx,.pptx" /></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('uploadResourceModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('uploadResourceModal');showToast('Resource uploaded and indexed successfully.','success')"><i data-lucide="upload" class="icon-xs"></i>Upload</button></div></div>
+</div>
+
+<!-- Create Announcement -->
+<div class="modal-overlay" id="createAnnounceModal">
+  <div class="modal"><div class="modal-head"><h3>Create Announcement</h3><button class="modal-close" onclick="closeModal('createAnnounceModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-field"><label>Title</label><input type="text" placeholder="Announcement title…" /></div><div class="modal-grid"><div class="modal-field"><label>Category</label><select><option>General</option><option>Faculty</option><option>Department</option><option>Urgent</option></select></div><div class="modal-field"><label>Audience</label><select><option>All Students</option><option>Faculty of Science</option><option>Computer Science</option><option>Mathematics</option></select></div></div><div class="modal-field"><label>Content</label><textarea placeholder="Write the announcement content…"></textarea></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('createAnnounceModal')">Save Draft</button><button class="btn btn--primary" onclick="closeModal('createAnnounceModal');showToast('Announcement published successfully.','success')"><i data-lucide="send" class="icon-xs"></i>Publish</button></div></div>
+</div>
+
+<!-- Create Opportunity -->
+<div class="modal-overlay" id="createOppModal">
+  <div class="modal"><div class="modal-head"><h3>Create Opportunity</h3><button class="modal-close" onclick="closeModal('createOppModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-field"><label>Title</label><input type="text" placeholder="Opportunity name…" /></div><div class="modal-grid"><div class="modal-field"><label>Type</label><select><option>Scholarship</option><option>Internship</option><option>Competition</option><option>Ambassador</option></select></div><div class="modal-field"><label>Closing Date</label><input type="date" /></div></div><div class="modal-field"><label>Description</label><textarea placeholder="Describe the opportunity…"></textarea></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('createOppModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('createOppModal');showToast('Opportunity published successfully.','success')"><i data-lucide="briefcase" class="icon-xs"></i>Publish</button></div></div>
+</div>
+
+<!-- Add Student -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal"><div class="modal-head"><h3>Add Student</h3><button class="modal-close" onclick="closeModal('addStudentModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-grid"><div class="modal-field"><label>First Name</label><input type="text" placeholder="First name" /></div><div class="modal-field"><label>Last Name</label><input type="text" placeholder="Last name" /></div></div><div class="modal-grid"><div class="modal-field"><label>Matric Number</label><input type="text" placeholder="201905000" maxlength="9" /></div><div class="modal-field"><label>Email</label><input type="email" placeholder="student@aaua.edu.ng" /></div></div><div class="modal-grid"><div class="modal-field"><label>Department</label><select><option>Computer Science</option><option>Mathematics</option><option>Physics</option><option>Economics</option></select></div><div class="modal-field"><label>Level</label><select><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select></div></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('addStudentModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('addStudentModal');showToast('Student account created successfully.','success')"><i data-lucide="user-plus" class="icon-xs"></i>Add Student</button></div></div>
+</div>
+
+<!-- Create Assignment -->
+<div class="modal-overlay" id="createAssignModal">
+  <div class="modal"><div class="modal-head"><h3>Create Assignment</h3><button class="modal-close" onclick="closeModal('createAssignModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-grid"><div class="modal-field"><label>Course Code</label><input type="text" placeholder="e.g. CSC 201" /></div><div class="modal-field"><label>Lecturer</label><input type="text" placeholder="Lecturer name" /></div></div><div class="modal-field"><label>Assignment Title</label><input type="text" placeholder="Assignment title…" /></div><div class="modal-grid"><div class="modal-field"><label>Due Date</label><input type="date" /></div><div class="modal-field"><label>Department</label><select><option>Computer Science</option><option>Mathematics</option><option>Physics</option></select></div></div><div class="modal-field"><label>Instructions</label><textarea placeholder="Assignment instructions…"></textarea></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('createAssignModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('createAssignModal');showToast('Assignment created and published.','success')"><i data-lucide="clipboard-list" class="icon-xs"></i>Create</button></div></div>
+</div>
+
+<!-- Create Event -->
+<div class="modal-overlay" id="createEventModal">
+  <div class="modal"><div class="modal-head"><h3>Add Calendar Event</h3><button class="modal-close" onclick="closeModal('createEventModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-field"><label>Event Title</label><input type="text" placeholder="Event name…" /></div><div class="modal-grid"><div class="modal-field"><label>Type</label><select><option>Academic</option><option>Exam</option><option>Deadline</option><option>Faculty Event</option><option>School Event</option></select></div><div class="modal-field"><label>Date</label><input type="date" /></div></div><div class="modal-field"><label>Description</label><textarea placeholder="Event description…"></textarea></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('createEventModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('createEventModal');showToast('Event added to academic calendar.','success')"><i data-lucide="calendar-days" class="icon-xs"></i>Add Event</button></div></div>
+</div>
+
+<!-- Toast Region -->
+<div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — StudentPal</title>
+  <meta name="description" content="Sign in to StudentPal to access your academic resources, opportunities, and student community." />
+
+  <!--
+    Blocking theme script — runs BEFORE css loads so there is zero flash
+    of the wrong theme. Reads localStorage, falls back to OS preference.
+  -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("studentpal-theme");
+        var theme  = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563EB'/%3E%3Cstop offset='1' stop-color='%2306B6D4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/auth.css" />
+</head>
+
+<!--
+  page-enter starts the body at opacity:0.
+  login.js removes it via requestAnimationFrame so the page fades in.
+-->
+<body class="auth-body page-enter">
+
+  <!-- Theme toggle — wired by login.js -->
+  <button class="theme-toggle theme-toggle--floating" id="themeToggle"
+          aria-label="Switch to dark theme" aria-pressed="false">
+    <i data-lucide="sun"  class="theme-toggle__icon theme-toggle__icon--sun"></i>
+    <i data-lucide="moon" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+  </button>
+
+  <div class="auth-shell">
+
+    <!-- ── BRAND PANEL (desktop left side) ── -->
+    <aside class="brand-panel">
+      <div class="brand-panel__decor" aria-hidden="true">
+        <span class="blob blob--a"></span>
+        <span class="blob blob--b"></span>
+      </div>
+
+      <a href="index.html" class="brand brand--light">
+        <span class="brand__mark"><i data-lucide="graduation-cap"></i></span>
+        <span class="brand__name">StudentPal</span>
+      </a>
+
+      <div class="brand-panel__copy">
+        <p class="eyebrow eyebrow--light">
+          <i data-lucide="sparkles" class="icon-xs"></i>Student Portal
+        </p>
+        <h1>Welcome Back</h1>
+        <p>Sign in to access your academic resources, opportunities, and student community.</p>
+      </div>
+
+      <!-- Floating dashboard preview card -->
+      <div class="preview-card" aria-hidden="true">
+        <div class="preview-card__head">
+          <span class="preview-card__avatar">AR</span>
+          <div>
+            <p class="preview-card__name">Alienrocky</p>
+            <p class="preview-card__meta">Computer Science · 200L</p>
+          </div>
+        </div>
+        <div class="preview-card__stats">
+          <div><span>128</span>Resources</div>
+          <div><span>9</span>Applied</div>
+        </div>
+        <div class="preview-card__list">
+          <p><i data-lucide="file-text" class="icon-xs"></i>CSC 201 — Data Structures notes</p>
+          <p><i data-lucide="briefcase" class="icon-xs"></i>MTN Scholarship — closes in 2 days</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── AUTH PANEL (right side / full width on mobile) ── -->
+    <main class="auth-panel">
+      <div class="auth-card glass">
+
+        <!-- Shown only on mobile where the brand panel is hidden -->
+        <a href="index.html" class="brand brand--compact">
+          <span class="brand__mark"><i data-lucide="graduation-cap"></i></span>
+          <span class="brand__name">StudentPal</span>
+        </a>
+
+        <div class="auth-card__head">
+          <h2>Sign In</h2>
+          <p>Enter your credentials to continue.</p>
+        </div>
+
+        <form id="loginForm" novalidate>
+
+          <!-- Email -->
+          <div class="field">
+            <label for="loginEmail">Email Address</label>
+            <div class="field__control">
+              <i data-lucide="mail" class="field__icon icon-sm"></i>
+              <input
+                type="email" id="loginEmail" name="email"
+                placeholder="alienrocky@aaua.edu.ng"
+                autocomplete="email"
+                aria-describedby="loginEmailError"
+                required />
+            </div>
+            <p class="field__error" id="loginEmailError" role="alert"></p>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <div class="field__control">
+              <i data-lucide="lock" class="field__icon icon-sm"></i>
+              <input
+                type="password" id="loginPassword" name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                aria-describedby="loginPasswordError"
+                required />
+              <!-- data-toggle-for is picked up by login.js -->
+              <button type="button"
+                      class="field__toggle"
+                      data-toggle-for="loginPassword"
+                      aria-label="Show password">
+                <i data-lucide="eye" class="icon-sm"></i>
+              </button>
+            </div>
+            <p class="field__error" id="loginPasswordError" role="alert"></p>
+          </div>
+
+          <!-- Remember me + Forgot password -->
+          <div class="field-row">
+            <label class="checkbox">
+              <input type="checkbox" id="rememberMe" name="remember" />
+              <span class="checkbox__box"></span>
+              <span class="checkbox__text">Remember Me</span>
+            </label>
+            <a href="forgot-password.html" class="link-muted">Forgot Password?</a>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn--primary btn--block btn--lg" id="loginSubmit">
+            <span class="btn__label">Sign In</span>
+            <span class="btn__spinner" aria-hidden="true"></span>
+          </button>
+
+          <div class="divider"><span>or continue with</span></div>
+
+          <!-- Google (UI only — wire up OAuth when ready) -->
+          <button type="button" class="btn btn--google btn--block btn--lg">
+            <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#FFC107" d="M43.6 20.5H42V20.4H24v7.2h11.3c-1.6 4.6-6 7.9-11.3 7.9-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.1-5.1C33.5 6.1 29 4.4 24 4.4 13.2 4.4 4.4 13.2 4.4 24S13.2 43.6 24 43.6 43.6 34.8 43.6 24c0-1.2-.1-2.4-.4-3.5z"/>
+              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13.2 24 13.2c3.1 0 5.8 1.1 8 3l5.1-5.1C33.5 6.1 29 4.4 24 4.4c-7.6 0-14.1 4.3-17.7 10.3z"/>
+              <path fill="#4CAF50" d="M24 43.6c4.9 0 9.4-1.9 12.8-4.9l-5.9-5c-2 1.4-4.6 2.3-6.9 2.3-5.3 0-9.7-3.3-11.3-7.9l-6.5 5C9.8 39.3 16.3 43.6 24 43.6z"/>
+              <path fill="#1976D2" d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.2 4.2-4.1 5.6l5.9 5C40.6 35.1 43.6 30 43.6 24c0-1.2-.1-2.4-.4-3.5z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+        </form>
+
+        <p class="auth-card__footer">
+          Don't have an account?
+          <a href="register.html">Create Account</a>
+        </p>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast notifications (populated by login.js) -->
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <!--
+    SCRIPT LOAD ORDER — do not change:
+      1. Lucide (must exist before login.js calls createIcons)
+      2. login.js (self-contained — handles everything above)
+
+    auth.js is intentionally NOT loaded here.
+    It attaches its own #loginForm handler which would conflict.
+  -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/login.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — StudentPal</title>
+  <meta name="description" content="Your StudentPal dashboard — resources, opportunities, announcements, and academic progress in one place." />
+
+  <!-- Blocking theme-init: sets the theme attribute before first paint -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('studentpal-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563EB'/%3E%3Cstop offset='1' stop-color='%2306B6D4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/dashboard.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__top">
+        <a href="dashboard.html" class="brand" aria-label="StudentPal home">
+          <span class="brand__mark" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+          <span class="brand__name">StudentPal</span>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+          <i data-lucide="x" class="icon-sm"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar__nav" aria-label="Main">
+        <a href="dashboard.html" class="nav-item is-active" aria-current="page">
+          <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+        </a>
+        <a href="resources.html" class="nav-item">
+          <i data-lucide="folder-open"></i><span>Resources</span>
+        </a>
+        <a href="annoucements.html" class="nav-item">
+          <i data-lucide="megaphone"></i><span>Announcements</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i data-lucide="briefcase"></i><span>Opportunities</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i data-lucide="users"></i><span>Community</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i data-lucide="clipboard-list"></i><span>Assignments</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i data-lucide="calendar-days"></i><span>Academic Calendar</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i data-lucide="settings"></i><span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__profile">
+        <span class="sidebar__profile-avatar">AR</span>
+        <div class="sidebar__profile-info">
+          <p class="sidebar__profile-name">Alienrocky</p>
+          <p class="sidebar__profile-meta">Computer Science · 200L</p>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ============ APP BODY ============ -->
+    <div class="app__body">
+
+      <!-- ============ TOPBAR ============ -->
+      <header class="topbar" id="topbar">
+        <div class="topbar__left">
+          <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false">
+            <i data-lucide="menu" class="icon-sm"></i>
+          </button>
+          <div class="topbar__welcome">
+            <p class="topbar__greeting" id="greeting">Good Evening, Alien <span aria-hidden="true">👋</span></p>
+            <p class="topbar__date" id="todayDate">Sunday, June 21</p>
+          </div>
+        </div>
+
+        <div class="topbar__search">
+          <i data-lucide="search" class="icon-sm"></i>
+          <input type="text" placeholder="Search resources, opportunities, courses…" aria-label="Search" />
+        </div>
+
+        <div class="topbar__actions">
+          <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+            <i data-lucide="sun" class="theme-toggle__icon theme-toggle__icon--sun"></i>
+            <i data-lucide="moon" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+          </button>
+
+          <div class="dropdown" id="notifDropdown">
+            <button class="icon-btn" id="notifButton" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+              <i data-lucide="bell" class="icon-sm"></i>
+              <span class="icon-btn__badge">3</span>
+            </button>
+            <div class="dropdown__panel dropdown__panel--notif" id="notifPanel" role="menu">
+              <p class="dropdown__heading">Notifications</p>
+              <a href="#" class="notif-item" role="menuitem">
+                <span class="notif-item__icon notif-item__icon--primary"><i data-lucide="megaphone" class="icon-xs"></i></span>
+                <span class="notif-item__body"><strong>New announcement</strong> from CSC Department<small>10 minutes ago</small></span>
+              </a>
+              <a href="#" class="notif-item" role="menuitem">
+                <span class="notif-item__icon notif-item__icon--success"><i data-lucide="briefcase" class="icon-xs"></i></span>
+                <span class="notif-item__body"><strong>Deadline approaching</strong> — MTN Scholarship closes in 2 days<small>1 hour ago</small></span>
+              </a>
+              <a href="#" class="notif-item" role="menuitem">
+                <span class="notif-item__icon notif-item__icon--accent"><i data-lucide="users" class="icon-xs"></i></span>
+                <span class="notif-item__body"><strong>New reply</strong> on your community question<small>3 hours ago</small></span>
+              </a>
+              <a href="#" class="dropdown__footer">View all notifications</a>
+            </div>
+          </div>
+
+          <div class="dropdown" id="profileDropdown">
+            <button class="profile-trigger" id="profileButton" aria-label="Account menu" aria-haspopup="true" aria-expanded="false">
+              <span class="profile-trigger__avatar">AR</span>
+            </button>
+            <div class="dropdown__panel dropdown__panel--profile" id="profilePanel" role="menu">
+              <div class="dropdown__profile-head">
+                <span class="profile-trigger__avatar">AR</span>
+                <div>
+                  <p class="dropdown__profile-name">Alienrocky</p>
+                  <p class="dropdown__profile-email">alienrocky@aaua.edu.ng</p>
+                </div>
+              </div>
+              <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="user" class="icon-xs"></i>View Profile</a>
+              <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+              <a href="#" class="dropdown__item dropdown__item--danger" role="menuitem"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============ CONTENT ============ -->
+      <div class="app__content">
+
+        <!-- ============ MAIN COLUMN ============ -->
+        <main class="main-col">
+
+          <!-- SECTION 1: HERO -->
+          <section class="hero-card">
+            <div class="hero-card__text">
+              <p class="eyebrow"><i data-lucide="sparkles" class="icon-xs"></i>Semester 2 · 2025/2026</p>
+              <h1>Welcome Back</h1>
+              <p class="hero-card__sub">Stay productive and never miss an academic opportunity.</p>
+              <div class="hero-card__actions">
+                <a href="resources.html" class="btn btn--light">
+                  Explore Resources <i data-lucide="arrow-right" class="icon-sm"></i>
+                </a>
+                <a href="#opportunities" class="btn btn--ghost-light">
+                  <i data-lucide="briefcase" class="icon-sm"></i> Find Opportunities
+                </a>
+              </div>
+            </div>
+            <div class="hero-card__stats">
+              <div class="hero-stat">
+                <span class="hero-stat__icon"><i data-lucide="eye"></i></span>
+                <span class="hero-stat__num">128</span>
+                <span class="hero-stat__label">Resources Viewed</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat__icon"><i data-lucide="briefcase"></i></span>
+                <span class="hero-stat__num">9</span>
+                <span class="hero-stat__label">Opportunities Applied</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat__icon"><i data-lucide="message-square"></i></span>
+                <span class="hero-stat__num">24</span>
+                <span class="hero-stat__label">Community Posts</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat__icon"><i data-lucide="bookmark"></i></span>
+                <span class="hero-stat__num">37</span>
+                <span class="hero-stat__label">Saved Items</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 2: QUICK ACTIONS -->
+          <section class="panel">
+            <div class="panel__head">
+              <h2>Quick Actions</h2>
+            </div>
+            <div class="quick-grid">
+              <a href="resources.html" class="quick-card">
+                <span class="quick-card__icon"><i data-lucide="folder-open"></i></span>
+                <span>Browse Resources</span>
+              </a>
+              <a href="#" class="quick-card">
+                <span class="quick-card__icon"><i data-lucide="briefcase"></i></span>
+                <span>View Opportunities</span>
+              </a>
+              <a href="#" class="quick-card">
+                <span class="quick-card__icon"><i data-lucide="megaphone"></i></span>
+                <span>Latest Announcements</span>
+              </a>
+              <a href="#" class="quick-card">
+                <span class="quick-card__icon"><i data-lucide="users"></i></span>
+                <span>Join Community</span>
+              </a>
+              <a href="#" class="quick-card">
+                <span class="quick-card__icon"><i data-lucide="upload"></i></span>
+                <span>Upload Notes</span>
+              </a>
+              <a href="#" class="quick-card">
+                <span class="quick-card__icon"><i data-lucide="calendar-days"></i></span>
+                <span>View Calendar</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- SECTION 3: ANNOUNCEMENTS -->
+          <section class="panel">
+            <div class="panel__head">
+              <h2>Latest Announcements</h2>
+              <a href="#" class="panel__link">View all <i data-lucide="arrow-right" class="icon-xs"></i></a>
+            </div>
+            <div class="announce-grid">
+              <article class="announce-card">
+                <span class="badge badge--primary">School News</span>
+                <h3>AAUA Wins National Robotics Challenge</h3>
+                <p class="card-date"><i data-lucide="calendar" class="icon-xs"></i>June 18, 2026</p>
+                <a href="#" class="read-more">Read More <i data-lucide="arrow-right" class="icon-xs"></i></a>
+              </article>
+              <article class="announce-card">
+                <span class="badge badge--accent">Department Update</span>
+                <h3>CSC Department Updates Course Registration Portal</h3>
+                <p class="card-date"><i data-lucide="calendar" class="icon-xs"></i>June 17, 2026</p>
+                <a href="#" class="read-more">Read More <i data-lucide="arrow-right" class="icon-xs"></i></a>
+              </article>
+              <article class="announce-card">
+                <span class="badge badge--success">Exam Timetable</span>
+                <h3>Second Semester Exam Timetable Released</h3>
+                <p class="card-date"><i data-lucide="calendar" class="icon-xs"></i>June 15, 2026</p>
+                <a href="#" class="read-more">Read More <i data-lucide="arrow-right" class="icon-xs"></i></a>
+              </article>
+              <article class="announce-card">
+                <span class="badge badge--danger">Registration</span>
+                <h3>Late Registration Deadline Extended to June 30</h3>
+                <p class="card-date"><i data-lucide="calendar" class="icon-xs"></i>June 14, 2026</p>
+                <a href="#" class="read-more">Read More <i data-lucide="arrow-right" class="icon-xs"></i></a>
+              </article>
+            </div>
+          </section>
+
+          <!-- SECTION 4: OPPORTUNITIES -->
+          <section class="panel" id="opportunities">
+            <div class="panel__head">
+              <h2>Opportunities Feed</h2>
+              <a href="#" class="panel__link">View all <i data-lucide="arrow-right" class="icon-xs"></i></a>
+            </div>
+            <div class="opp-grid">
+              <article class="opp-card">
+                <span class="badge badge--primary">Scholarship</span>
+                <h3>MTN Foundation STEM Scholarship</h3>
+                <p>Full tuition support for 200L–400L STEM students with a CGPA above 4.0.</p>
+                <div class="opp-card__foot">
+                  <span class="deadline deadline--urgent"><i data-lucide="clock" class="icon-xs"></i>Closes in 2 days</span>
+                  <a href="#" class="btn btn--primary btn--sm">Apply</a>
+                </div>
+              </article>
+              <article class="opp-card">
+                <span class="badge badge--accent">Internship</span>
+                <h3>Andela Frontend Engineering Internship</h3>
+                <p>3-month remote internship for students with React and JavaScript experience.</p>
+                <div class="opp-card__foot">
+                  <span class="deadline deadline--soon"><i data-lucide="clock" class="icon-xs"></i>Closes in 14 days</span>
+                  <a href="#" class="btn btn--primary btn--sm">Apply</a>
+                </div>
+              </article>
+              <article class="opp-card">
+                <span class="badge badge--success">Tech Competition</span>
+                <h3>AAUA Hackathon 2026</h3>
+                <p>48-hour campus hackathon — build a project solving a real student problem.</p>
+                <div class="opp-card__foot">
+                  <span class="deadline deadline--urgent"><i data-lucide="clock" class="icon-xs"></i>Closes in 4 days</span>
+                  <a href="#" class="btn btn--primary btn--sm">Apply</a>
+                </div>
+              </article>
+              <article class="opp-card">
+                <span class="badge badge--danger">Ambassador Program</span>
+                <h3>Google Developer Student Club Ambassador</h3>
+                <p>Represent GDSC on campus and lead tech workshops for fellow students.</p>
+                <div class="opp-card__foot">
+                  <span class="deadline"><i data-lucide="clock" class="icon-xs"></i>Closes in 19 days</span>
+                  <a href="#" class="btn btn--primary btn--sm">Apply</a>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- SECTION 5: RESOURCE HUB -->
+          <section class="panel" id="resources">
+            <div class="panel__head">
+              <h2>Resource Hub</h2>
+              <a href="#" class="panel__link">View all <i data-lucide="arrow-right" class="icon-xs"></i></a>
+            </div>
+            <div class="resource-grid">
+              <article class="resource-card">
+                <span class="resource-card__icon"><i data-lucide="file-text"></i></span>
+                <div class="resource-card__body">
+                  <span class="badge badge--neutral">Past Questions</span>
+                  <h3>CSC 201 — Data Structures Past Questions</h3>
+                  <div class="resource-card__meta">
+                    <span><i data-lucide="download" class="icon-xs"></i>342</span>
+                    <span class="file-tag">PDF</span>
+                    <span class="course-tag">CSC 201</span>
+                  </div>
+                </div>
+              </article>
+              <article class="resource-card">
+                <span class="resource-card__icon"><i data-lucide="file-text"></i></span>
+                <div class="resource-card__body">
+                  <span class="badge badge--neutral">Lecture Notes</span>
+                  <h3>MTH 201 — Linear Algebra Notes</h3>
+                  <div class="resource-card__meta">
+                    <span><i data-lucide="download" class="icon-xs"></i>218</span>
+                    <span class="file-tag">PDF</span>
+                    <span class="course-tag">MTH 201</span>
+                  </div>
+                </div>
+              </article>
+              <article class="resource-card">
+                <span class="resource-card__icon"><i data-lucide="book-open"></i></span>
+                <div class="resource-card__body">
+                  <span class="badge badge--neutral">E-book</span>
+                  <h3>Introduction to Algorithms (CLRS)</h3>
+                  <div class="resource-card__meta">
+                    <span><i data-lucide="download" class="icon-xs"></i>503</span>
+                    <span class="file-tag">PDF</span>
+                    <span class="course-tag">CSC 301</span>
+                  </div>
+                </div>
+              </article>
+              <article class="resource-card">
+                <span class="resource-card__icon"><i data-lucide="files"></i></span>
+                <div class="resource-card__body">
+                  <span class="badge badge--neutral">Handout</span>
+                  <h3>GST 202 — Logic &amp; Philosophy Handout</h3>
+                  <div class="resource-card__meta">
+                    <span><i data-lucide="download" class="icon-xs"></i>156</span>
+                    <span class="file-tag">DOCX</span>
+                    <span class="course-tag">GST 202</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- SECTION 6: UPCOMING ACADEMIC EVENTS -->
+          <section class="panel">
+            <div class="panel__head">
+              <h2>Upcoming Academic Events</h2>
+            </div>
+            <ol class="timeline">
+              <li class="timeline-item">
+                <span class="timeline-item__dot timeline-item__dot--danger"></span>
+                <div class="timeline-item__body">
+                  <span class="timeline-item__date">June 30, 2026</span>
+                  <h3>Registration Deadline</h3>
+                  <p>Last day to complete course registration for the second semester.</p>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <span class="timeline-item__dot timeline-item__dot--accent"></span>
+                <div class="timeline-item__body">
+                  <span class="timeline-item__date">July 3, 2026</span>
+                  <h3>CSC 201 Continuous Assessment Test</h3>
+                  <p>Covers Weeks 1–6: Arrays, Linked Lists, and Stacks.</p>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <span class="timeline-item__dot timeline-item__dot--primary"></span>
+                <div class="timeline-item__body">
+                  <span class="timeline-item__date">July 14, 2026</span>
+                  <h3>Second Semester Exams Begin</h3>
+                  <p>Examination timetable has been published — check your department portal.</p>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <span class="timeline-item__dot timeline-item__dot--success"></span>
+                <div class="timeline-item__body">
+                  <span class="timeline-item__date">July 20, 2026</span>
+                  <h3>Faculty of Science Annual Dinner</h3>
+                  <p>Evening event for graduating and returning students — New Lecture Theatre.</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <!-- SECTION 7: COMMUNITY ACTIVITY -->
+          <section class="panel">
+            <div class="panel__head">
+              <h2>Community Activity</h2>
+              <a href="#" class="panel__link">View all <i data-lucide="arrow-right" class="icon-xs"></i></a>
+            </div>
+            <div class="community-grid">
+              <div class="community-card">
+                <p class="community-card__label">Recent Post</p>
+                <div class="community-post">
+                  <span class="community-post__avatar">FO</span>
+                  <div>
+                    <p><strong>Faith O.</strong> in <span class="community-post__tag">#200-level-cs</span></p>
+                    <p class="community-post__text">"Anyone has the CSC 205 assignment file? My copy got corrupted 😭"</p>
+                    <p class="community-post__meta"><i data-lucide="message-square" class="icon-xs"></i>6 replies · 18 minutes ago</p>
+                  </div>
+                </div>
+              </div>
+              <div class="community-card">
+                <p class="community-card__label">Popular Discussion</p>
+                <div class="community-post">
+                  <span class="community-post__avatar">DK</span>
+                  <div>
+                    <p><strong>David K.</strong> in <span class="community-post__tag">#study-tips</span></p>
+                    <p class="community-post__text">"What are the best resources for learning Data Structures from scratch?"</p>
+                    <p class="community-post__meta"><i data-lucide="message-square" class="icon-xs"></i>34 replies · 2 hours ago</p>
+                  </div>
+                </div>
+              </div>
+              <div class="community-card">
+                <p class="community-card__label">Student Question</p>
+                <div class="community-post">
+                  <span class="community-post__avatar">TA</span>
+                  <div>
+                    <p><strong>Tobi A.</strong> in <span class="community-post__tag">#general</span></p>
+                    <p class="community-post__text">"How do I check my CGPA on the student portal? Can't find the page."</p>
+                    <p class="community-post__meta"><i data-lucide="message-square" class="icon-xs"></i>12 replies · 5 hours ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </main>
+
+        <!-- ============ RIGHT SIDEBAR ============ -->
+        <aside class="right-col">
+
+          <section class="widget">
+            <div class="widget__head">
+              <h2>Today's Tasks</h2>
+              <span class="widget__count" id="taskCount">0/3</span>
+            </div>
+            <ul class="task-list" id="taskList">
+              <li class="task-item" data-task="assignment">
+                <button class="task-checkbox" aria-pressed="false" aria-label="Mark Complete Assignment as done"></button>
+                <span>Complete CSC 201 Assignment</span>
+              </li>
+              <li class="task-item" data-task="announcement">
+                <button class="task-checkbox" aria-pressed="false" aria-label="Mark Read Announcement as done"></button>
+                <span>Read Department Announcement</span>
+              </li>
+              <li class="task-item" data-task="download">
+                <button class="task-checkbox" aria-pressed="false" aria-label="Mark Download Resources as done"></button>
+                <span>Download Week 6 Resources</span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="widget">
+            <div class="widget__head">
+              <h2>Academic Progress</h2>
+            </div>
+            <div class="progress-ring">
+              <svg viewBox="0 0 120 120" class="progress-ring__svg" aria-hidden="true">
+                <circle class="progress-ring__track" cx="60" cy="60" r="52"></circle>
+                <circle class="progress-ring__bar" id="progressBar" cx="60" cy="60" r="52"></circle>
+              </svg>
+              <div class="progress-ring__label">
+                <span class="progress-ring__num" id="progressNum">0%</span>
+                <span class="progress-ring__caption">Semester</span>
+              </div>
+            </div>
+            <p class="progress-note">Current Semester Progress: <strong>75%</strong></p>
+          </section>
+
+          <section class="widget">
+            <div class="widget__head">
+              <h2>Upcoming Deadlines</h2>
+            </div>
+            <ul class="deadline-list">
+              <li>
+                <span class="deadline-list__dot deadline-list__dot--urgent"></span>
+                <div>
+                  <p>CSC 201 Assignment</p>
+                  <span class="deadline-list__time">Due in 2 days</span>
+                </div>
+              </li>
+              <li>
+                <span class="deadline-list__dot deadline-list__dot--soon"></span>
+                <div>
+                  <p>MTN Scholarship</p>
+                  <span class="deadline-list__time">Due in 5 days</span>
+                </div>
+              </li>
+              <li>
+                <span class="deadline-list__dot"></span>
+                <div>
+                  <p>Hackathon Registration</p>
+                  <span class="deadline-list__time">Due in 7 days</span>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+        </aside>
+
+      </div>
+
+      <!-- ============ FOOTER ============ -->
+      <footer class="app-footer">
+        <i data-lucide="quote" class="icon-sm"></i>
+        <p>“Small progress each day adds up to big results.”</p>
+      </footer>
+
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/auth-guard.js"></script>
+</body>
+</html>

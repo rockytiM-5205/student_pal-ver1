@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opportunities — StudentPal</title>
+  <script>(function(){try{var t=localStorage.getItem('studentpal-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2306B6D4'/%3E%3Cstop offset='1' stop-color='%232563EB'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__top">
+      <a href="dashboard.html" class="brand"><span class="brand__mark"><i data-lucide="graduation-cap"></i></span><span class="brand__name">StudentPal</span></a>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i data-lucide="x"></i></button>
+    </div>
+    <nav class="sidebar__nav" aria-label="Main navigation">
+      <a href="dashboard.html"    class="nav-item"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+      <a href="resources.html"    class="nav-item"><i data-lucide="folder-open"></i><span>Resources</span></a>
+      <a href="announcements.html" class="nav-item"><i data-lucide="megaphone"></i><span>Announcements</span></a>
+      <a href="opportunities.html" class="nav-item is-active" aria-current="page"><i data-lucide="briefcase"></i><span>Opportunities</span></a>
+      <a href="community.html"    class="nav-item"><i data-lucide="users"></i><span>Community</span></a>
+      <a href="assignments.html"  class="nav-item"><i data-lucide="clipboard-list"></i><span>Assignments</span></a>
+      <a href="calendar.html"     class="nav-item"><i data-lucide="calendar-days"></i><span>Academic Calendar</span></a>
+      <a href="settings.html"     class="nav-item"><i data-lucide="settings"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar__profile">
+      <span class="sidebar__profile-avatar">AR</span>
+      <div class="sidebar__profile-info"><p class="sidebar__profile-name">Alienrocky</p><p class="sidebar__profile-meta">Computer Science · 200L</p></div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app__body">
+    <header class="topbar" id="topbar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false"><i data-lucide="menu" class="icon-sm"></i></button>
+      <div class="topbar__info">
+        <p class="topbar__greeting" id="greeting">Good Morning, Alien 👋</p>
+        <p class="topbar__datetime" id="topbarDatetime"></p>
+      </div>
+      <div class="topbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" placeholder="Search across StudentPal…" aria-label="Global search" /></div>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+          <i data-lucide="sun" class="tt-icon tt-icon--sun"></i><i data-lucide="moon" class="tt-icon tt-icon--moon"></i>
+        </button>
+        <div class="dropdown">
+          <button class="icon-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false"><i data-lucide="bell" class="icon-sm"></i><span class="icon-btn__badge">3</span></button>
+          <div class="dropdown__panel" id="notifPanel" role="menu">
+            <p class="dropdown__head">Notifications</p>
+            <a href="#" class="dropdown__item"><i data-lucide="briefcase" class="icon-xs"></i>MTN Scholarship closes in 2 days</a>
+            <a href="#" class="dropdown__item"><i data-lucide="briefcase" class="icon-xs"></i>Andela Internship — 14 days left</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="topbar-avatar" id="avatarBtn" aria-label="Account menu" aria-expanded="false">AR</button>
+          <div class="dropdown__panel" id="avatarPanel" role="menu">
+            <div style="padding:var(--s3);border-bottom:1px solid var(--color-border)"><p style="font-weight:600;font-size:.88rem">Alienrocky</p><p style="font-size:.74rem;color:var(--color-text-faint)">alienrocky@aaua.edu.ng</p></div>
+            <a href="settings.html" class="dropdown__item"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+            <div class="dropdown__divider"></div>
+            <a href="login.html" class="dropdown__item dropdown__item--danger"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app__content" id="opportunitiesPage">
+      <div class="page-header">
+        <h1>Opportunities</h1>
+        <p>Scholarships, internships, competitions, and ambassador programs — all in one place.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-primary-soft);color:var(--color-primary)"><i data-lucide="briefcase" class="icon-md"></i></div>
+          <p class="stat-box__num">42</p><p class="stat-box__label">Open Opportunities</p>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-success-soft);color:var(--color-success)"><i data-lucide="check-circle" class="icon-md"></i></div>
+          <p class="stat-box__num">9</p><p class="stat-box__label">Applied by You</p>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-danger-soft);color:var(--color-danger)"><i data-lucide="clock" class="icon-md"></i></div>
+          <p class="stat-box__num">3</p><p class="stat-box__label">Closing This Week</p>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-warning-soft);color:var(--color-warning)"><i data-lucide="bookmark" class="icon-md"></i></div>
+          <p class="stat-box__num">7</p><p class="stat-box__label">Saved</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <select class="filter-select" id="oppFilter" aria-label="Filter by type">
+          <option value="">All Types</option>
+          <option value="scholarship">Scholarships</option>
+          <option value="internship">Internships</option>
+          <option value="competition">Competitions</option>
+          <option value="ambassador">Ambassador Programs</option>
+        </select>
+        <select class="filter-select" aria-label="Filter by status" onchange="var v=this.value;document.querySelectorAll('.opp-card').forEach(function(c){c.style.display=(!v||c.getAttribute('data-status')===v)?'':'none'})">
+          <option value="">All Status</option>
+          <option value="open">Open</option>
+          <option value="closing-soon">Closing Soon</option>
+          <option value="applied">Applied</option>
+        </select>
+      </div>
+
+      <div class="opp-grid">
+
+        <article class="opp-card" data-type="scholarship" data-status="closing-soon">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-primary-soft);color:var(--color-primary)"><i data-lucide="award" class="icon-md"></i></div>
+            <span class="badge badge--red">Closing Soon</span>
+          </div>
+          <span class="badge badge--cyan" style="align-self:flex-start;margin-bottom:var(--s3)">Scholarship</span>
+          <h3 class="opp-card__title">MTN Foundation STEM Scholarship</h3>
+          <p class="opp-card__desc">Full tuition support for 200L–400L STEM students with CGPA above 4.0. Includes a monthly stipend and mentorship program from MTN engineers.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline opp-card__deadline--urgent"><i data-lucide="clock" class="icon-xs"></i>Closes in 2 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="internship" data-status="open">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-blue-soft);color:var(--color-blue)"><i data-lucide="code-2" class="icon-md"></i></div>
+            <span class="badge badge--green">Open</span>
+          </div>
+          <span class="badge badge--blue" style="align-self:flex-start;margin-bottom:var(--s3)">Internship</span>
+          <h3 class="opp-card__title">Andela Frontend Engineering Internship</h3>
+          <p class="opp-card__desc">3-month fully remote internship for students with React or Vue.js experience. Competitive pay, career development, and a global engineering network.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline opp-card__deadline--soon"><i data-lucide="clock" class="icon-xs"></i>Closes in 14 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="competition" data-status="closing-soon">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-success-soft);color:var(--color-success)"><i data-lucide="zap" class="icon-md"></i></div>
+            <span class="badge badge--red">Closing Soon</span>
+          </div>
+          <span class="badge badge--green" style="align-self:flex-start;margin-bottom:var(--s3)">Competition</span>
+          <h3 class="opp-card__title">AAUA Hackathon 2026</h3>
+          <p class="opp-card__desc">48-hour campus hackathon — build a product that solves a real student problem. ₦500,000 prize pool. Teams of 2–4 students from any department.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline opp-card__deadline--urgent"><i data-lucide="clock" class="icon-xs"></i>Closes in 4 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="ambassador" data-status="open">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-warning-soft);color:var(--color-warning)"><i data-lucide="globe" class="icon-md"></i></div>
+            <span class="badge badge--green">Open</span>
+          </div>
+          <span class="badge badge--amber" style="align-self:flex-start;margin-bottom:var(--s3)">Ambassador</span>
+          <h3 class="opp-card__title">Google Developer Student Club — Lead</h3>
+          <p class="opp-card__desc">Lead the GDSC chapter at AAUA for 2026/2027. Organize workshops, host events, connect students with Google resources, and build community.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline"><i data-lucide="clock" class="icon-xs"></i>Closes in 19 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="scholarship" data-status="applied">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-purple-soft);color:var(--color-purple)"><i data-lucide="graduation-cap" class="icon-md"></i></div>
+            <span class="badge badge--neutral">Applied</span>
+          </div>
+          <span class="badge badge--cyan" style="align-self:flex-start;margin-bottom:var(--s3)">Scholarship</span>
+          <h3 class="opp-card__title">ASUU Merit Scholarship 2026</h3>
+          <p class="opp-card__desc">Academic excellence scholarship open to 200L–400L students with CGPA of 4.5 and above. Covers one full semester of tuition fees.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline" style="color:var(--color-success)"><i data-lucide="check-circle" class="icon-xs"></i>Application submitted</span>
+            <button class="btn btn--outline btn--sm" disabled>Applied</button>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="internship" data-status="open">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-danger-soft);color:var(--color-danger)"><i data-lucide="server" class="icon-md"></i></div>
+            <span class="badge badge--green">Open</span>
+          </div>
+          <span class="badge badge--blue" style="align-self:flex-start;margin-bottom:var(--s3)">Internship</span>
+          <h3 class="opp-card__title">Flutterwave Backend Engineering Intern</h3>
+          <p class="opp-card__desc">Join Flutterwave's engineering team for a 4-month internship focused on payment APIs, system design, and distributed backend services. Python or Node.js required.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline"><i data-lucide="clock" class="icon-xs"></i>Closes in 22 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="competition" data-status="open">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-primary-soft);color:var(--color-primary)"><i data-lucide="cpu" class="icon-md"></i></div>
+            <span class="badge badge--green">Open</span>
+          </div>
+          <span class="badge badge--green" style="align-self:flex-start;margin-bottom:var(--s3)">Competition</span>
+          <h3 class="opp-card__title">Nigerian Students AI Challenge</h3>
+          <p class="opp-card__desc">Build an AI-powered solution addressing a local Nigerian problem. Open to all undergraduate students. Winners receive funding, mentorship, and incubation support.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline"><i data-lucide="clock" class="icon-xs"></i>Closes in 30 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+        <article class="opp-card" data-type="ambassador" data-status="open">
+          <div class="opp-card__top">
+            <div class="opp-card__icon" style="background:var(--color-success-soft);color:var(--color-success)"><i data-lucide="megaphone" class="icon-md"></i></div>
+            <span class="badge badge--green">Open</span>
+          </div>
+          <span class="badge badge--amber" style="align-self:flex-start;margin-bottom:var(--s3)">Ambassador</span>
+          <h3 class="opp-card__title">GitHub Campus Expert Program</h3>
+          <p class="opp-card__desc">Become a GitHub Campus Expert at AAUA — train students in Git, open source, and developer communities. Receive exclusive swag, travel grants, and certification.</p>
+          <div class="opp-card__foot">
+            <span class="opp-card__deadline"><i data-lucide="clock" class="icon-xs"></i>Closes in 45 days</span>
+            <a href="#" class="btn btn--primary btn--sm">Apply Now</a>
+          </div>
+        </article>
+
+      </div>
+    </main>
+  </div>
+</div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

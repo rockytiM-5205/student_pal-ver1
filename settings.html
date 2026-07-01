@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — StudentPal</title>
+  <script>(function(){try{var t=localStorage.getItem('studentpal-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2306B6D4'/%3E%3Cstop offset='1' stop-color='%232563EB'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .theme-cards { display:grid; grid-template-columns:1fr 1fr; gap:var(--s4); }
+    .theme-card {
+      border:2px solid var(--color-border);
+      border-radius:var(--r-md);
+      padding:var(--s4);
+      cursor:pointer;
+      display:flex; align-items:center; gap:var(--s3);
+      transition:var(--t-theme), border-color var(--t);
+    }
+    .theme-card.is-active { border-color:var(--color-primary); background:var(--color-primary-soft); }
+    .theme-card__preview {
+      width:40px; height:28px; border-radius:6px; border:1px solid var(--color-border);
+      display:flex; flex-direction:column; overflow:hidden; flex-shrink:0;
+    }
+    .theme-card__preview--light { background:#f8fafc; }
+    .theme-card__preview--dark  { background:#0f1520; }
+    .theme-card__bar { height:8px; margin:4px 4px 0; border-radius:2px; }
+    .theme-card__preview--light .theme-card__bar { background:#e2e8f0; }
+    .theme-card__preview--dark  .theme-card__bar { background:#1e293b; }
+    .theme-card__accent { height:5px; width:50%; margin:3px 4px 0; border-radius:2px; background:var(--color-primary); }
+    .theme-card__label { font-size:.86rem; font-weight:600; }
+    .feedback-msg { display:none; font-size:.82rem; margin-top:var(--s3); padding:var(--s3) var(--s4); border-radius:var(--r-sm); background:var(--color-success-soft); transition:var(--t-theme); }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__top">
+      <a href="dashboard.html" class="brand"><span class="brand__mark"><i data-lucide="graduation-cap"></i></span><span class="brand__name">StudentPal</span></a>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i data-lucide="x"></i></button>
+    </div>
+    <nav class="sidebar__nav" aria-label="Main navigation">
+      <a href="dashboard.html"     class="nav-item"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+      <a href="resources.html"     class="nav-item"><i data-lucide="folder-open"></i><span>Resources</span></a>
+      <a href="announcements.html" class="nav-item"><i data-lucide="megaphone"></i><span>Announcements</span></a>
+      <a href="opportunities.html" class="nav-item"><i data-lucide="briefcase"></i><span>Opportunities</span></a>
+      <a href="community.html"     class="nav-item"><i data-lucide="users"></i><span>Community</span></a>
+      <a href="assignments.html"   class="nav-item"><i data-lucide="clipboard-list"></i><span>Assignments</span></a>
+      <a href="calendar.html"      class="nav-item"><i data-lucide="calendar-days"></i><span>Academic Calendar</span></a>
+      <a href="settings.html"      class="nav-item is-active" aria-current="page"><i data-lucide="settings"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar__profile">
+      <span class="sidebar__profile-avatar">AR</span>
+      <div class="sidebar__profile-info"><p class="sidebar__profile-name">Alienrocky</p><p class="sidebar__profile-meta">Computer Science · 200L</p></div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app__body">
+    <header class="topbar" id="topbar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false"><i data-lucide="menu" class="icon-sm"></i></button>
+      <div class="topbar__info">
+        <p class="topbar__greeting" id="greeting">Good Morning, Alien 👋</p>
+        <p class="topbar__datetime" id="topbarDatetime"></p>
+      </div>
+      <div class="topbar__search"><i data-lucide="search" class="icon-sm"></i><input type="text" placeholder="Search across StudentPal…" aria-label="Global search" /></div>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+          <i data-lucide="sun" class="tt-icon tt-icon--sun"></i><i data-lucide="moon" class="tt-icon tt-icon--moon"></i>
+        </button>
+        <div class="dropdown">
+          <button class="icon-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false"><i data-lucide="bell" class="icon-sm"></i><span class="icon-btn__badge">3</span></button>
+          <div class="dropdown__panel" id="notifPanel" role="menu">
+            <p class="dropdown__head">Notifications</p>
+            <a href="#" class="dropdown__item"><i data-lucide="settings" class="icon-xs"></i>Profile updated successfully</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="topbar-avatar" id="avatarBtn" aria-label="Account menu" aria-expanded="false">AR</button>
+          <div class="dropdown__panel" id="avatarPanel" role="menu">
+            <div style="padding:var(--s3);border-bottom:1px solid var(--color-border)"><p style="font-weight:600;font-size:.88rem">Alienrocky</p><p style="font-size:.74rem;color:var(--color-text-faint)">alienrocky@aaua.edu.ng</p></div>
+            <a href="settings.html" class="dropdown__item dropdown__item--active"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+            <div class="dropdown__divider"></div>
+            <a href="login.html" class="dropdown__item dropdown__item--danger"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app__content" id="settingsPage">
+      <div class="page-header">
+        <h1>Settings</h1>
+        <p>Manage your profile, academic information, and account preferences.</p>
+      </div>
+
+      <div class="settings-layout">
+
+        <!-- PROFILE SETTINGS -->
+        <div class="settings-section">
+          <div class="settings-section__head">
+            <h2>Profile Settings</h2>
+            <p>Update your public profile information.</p>
+          </div>
+          <div class="settings-section__body">
+            <div class="avatar-area">
+              <div class="avatar-area__img">AR</div>
+              <div>
+                <button class="btn btn--outline btn--sm"><i data-lucide="upload" class="icon-xs"></i> Upload Photo</button>
+                <p>JPG, PNG or GIF · Max 2MB</p>
+              </div>
+            </div>
+
+            <form id="profileForm" novalidate>
+              <div class="settings-grid" style="gap:var(--s5)">
+                <div class="settings-field">
+                  <label for="settFirstName">First Name</label>
+                  <input type="text" id="settFirstName" value="Agbaje" autocomplete="given-name" />
+                </div>
+                <div class="settings-field">
+                  <label for="settLastName">Last Name</label>
+                  <input type="text" id="settLastName" value="Peter" autocomplete="family-name" />
+                </div>
+                <div class="settings-field">
+                  <label for="settEmail">Email Address</label>
+                  <input type="email" id="settEmail" value="alienrocky@aaua.edu.ng" autocomplete="email" />
+                </div>
+                <div class="settings-field">
+                  <label for="settPhone">Phone Number</label>
+                  <input type="tel" id="settPhone" value="+234 800 000 0000" autocomplete="tel" />
+                </div>
+              </div>
+              <div style="margin-top:var(--s5)">
+                <button type="submit" class="btn btn--primary btn--sm">
+                  <i data-lucide="save" class="icon-xs"></i> Save Profile
+                </button>
+              </div>
+              <p class="feedback-msg" id="profileMsg">✓ Profile updated successfully.</p>
+            </form>
+          </div>
+        </div>
+
+        <!-- ACADEMIC INFORMATION -->
+        <div class="settings-section">
+          <div class="settings-section__head">
+            <h2>Academic Information</h2>
+            <p>Your university and department details.</p>
+          </div>
+          <div class="settings-section__body">
+            <div class="settings-grid">
+              <div class="settings-field" style="grid-column:1/-1">
+                <label for="settUniversity">University</label>
+                <select id="settUniversity">
+                  <option selected>Adekunle Ajasin University Akungba (AAUA)</option>
+                  <option>University of Lagos (UNILAG)</option>
+                  <option>Obafemi Awolowo University (OAU)</option>
+                  <option>University of Ibadan (UI)</option>
+                </select>
+              </div>
+              <div class="settings-field">
+                <label for="settFaculty">Faculty</label>
+                <select id="settFaculty">
+                  <option selected>Faculty of Science</option>
+                  <option>Faculty of Arts</option>
+                  <option>Faculty of Social &amp; Management Sciences</option>
+                  <option>Faculty of Law</option>
+                </select>
+              </div>
+              <div class="settings-field">
+                <label for="settDept">Department</label>
+                <select id="settDept">
+                  <option selected>Computer Science</option>
+                  <option>Cyber Security</option>
+                  <option>Information Technology</option>
+                  <option>Software Engineering</option>
+                  <option>Mathematics</option>
+                  <option>Physics</option>
+                </select>
+              </div>
+              <div class="settings-field">
+                <label for="settLevel">Level</label>
+                <select id="settLevel">
+                  <option value="100">100 Level</option>
+                  <option value="200" selected>200 Level</option>
+                  <option value="300">300 Level</option>
+                  <option value="400">400 Level</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-top:var(--s5)">
+              <button class="btn btn--primary btn--sm" onclick="var m=document.getElementById('acadMsg');m.style.display='block';setTimeout(function(){m.style.display='none'},3000)">
+                <i data-lucide="save" class="icon-xs"></i> Save Academic Info
+              </button>
+            </div>
+            <p class="feedback-msg" id="acadMsg">✓ Academic information updated.</p>
+          </div>
+        </div>
+
+        <!-- ACCOUNT SECURITY -->
+        <div class="settings-section">
+          <div class="settings-section__head">
+            <h2>Account Security</h2>
+            <p>Keep your account safe with a strong password.</p>
+          </div>
+          <div class="settings-section__body">
+            <form id="pwChangeForm" novalidate>
+              <div class="settings-grid">
+                <div class="settings-field" style="grid-column:1/-1">
+                  <label for="currentPw">Current Password</label>
+                  <input type="password" id="currentPw" placeholder="••••••••" autocomplete="current-password" />
+                </div>
+                <div class="settings-field">
+                  <label for="newPw">New Password</label>
+                  <input type="password" id="newPw" placeholder="Min. 8 characters" autocomplete="new-password" />
+                </div>
+                <div class="settings-field">
+                  <label for="confirmPw">Confirm New Password</label>
+                  <input type="password" id="confirmPw" placeholder="Repeat new password" autocomplete="new-password" />
+                </div>
+              </div>
+              <div style="margin-top:var(--s5)">
+                <button type="submit" class="btn btn--primary btn--sm">
+                  <i data-lucide="lock" class="icon-xs"></i> Update Password
+                </button>
+              </div>
+              <p id="pwMsg" style="display:none;font-size:.82rem;margin-top:var(--s3)"></p>
+            </form>
+
+            <div style="padding-top:var(--s5);border-top:1px solid var(--color-border)">
+              <div class="toggle-row">
+                <div class="toggle-row__info">
+                  <h3>Two-Factor Authentication</h3>
+                  <p>Add an extra layer of security to your account via SMS or email OTP.</p>
+                </div>
+                <label class="toggle-switch" aria-label="Enable Two-Factor Authentication">
+                  <input type="checkbox" />
+                  <span class="toggle-switch__track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREFERENCES -->
+        <div class="settings-section">
+          <div class="settings-section__head">
+            <h2>Preferences</h2>
+            <p>Customise your StudentPal experience.</p>
+          </div>
+          <div class="settings-section__body">
+
+            <div>
+              <p style="font-size:.86rem;font-weight:600;margin-bottom:var(--s4)">Theme</p>
+              <div class="theme-cards">
+                <div class="theme-card" id="themeCardLight" onclick="switchThemeCard('light')">
+                  <div class="theme-card__preview theme-card__preview--light">
+                    <div class="theme-card__bar"></div>
+                    <div class="theme-card__accent"></div>
+                  </div>
+                  <span class="theme-card__label">☀️ Light</span>
+                </div>
+                <div class="theme-card" id="themeCardDark" onclick="switchThemeCard('dark')">
+                  <div class="theme-card__preview theme-card__preview--dark">
+                    <div class="theme-card__bar"></div>
+                    <div class="theme-card__accent"></div>
+                  </div>
+                  <span class="theme-card__label">🌙 Dark</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding-top:var(--s5);border-top:1px solid var(--color-border)">
+              <div class="toggle-row">
+                <div class="toggle-row__info">
+                  <h3>Push Notifications</h3>
+                  <p>Receive alerts for new announcements and deadlines.</p>
+                </div>
+                <label class="toggle-switch" aria-label="Enable Push Notifications">
+                  <input type="checkbox" checked />
+                  <span class="toggle-switch__track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-row__info">
+                  <h3>Email Digest</h3>
+                  <p>Get a weekly summary of opportunities and events.</p>
+                </div>
+                <label class="toggle-switch" aria-label="Enable Email Digest">
+                  <input type="checkbox" checked />
+                  <span class="toggle-switch__track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-row__info">
+                  <h3>Community Notifications</h3>
+                  <p>Get notified when someone replies to your posts.</p>
+                </div>
+                <label class="toggle-switch" aria-label="Enable Community Notifications">
+                  <input type="checkbox" />
+                  <span class="toggle-switch__track"></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECURITY / DANGER ZONE -->
+        <div class="settings-section">
+          <div class="settings-section__head">
+            <h2>Account Actions</h2>
+            <p>Manage your session and account data.</p>
+          </div>
+          <div class="settings-section__body">
+            <div class="danger-zone">
+              <div class="danger-row">
+                <div class="danger-row__info">
+                  <h3>Log Out</h3>
+                  <p>End your current session on this device.</p>
+                </div>
+                <button class="btn btn--outline btn--sm" id="logoutBtn">
+                  <i data-lucide="log-out" class="icon-xs"></i> Log Out
+                </button>
+              </div>
+              <div class="danger-row" style="padding-top:var(--s5);border-top:1px solid var(--color-danger-soft)">
+                <div class="danger-row__info">
+                  <h3 style="color:var(--color-danger)">Delete Account</h3>
+                  <p>Permanently remove your account and all associated data. This action cannot be undone.</p>
+                </div>
+                <button class="btn btn--danger btn--sm" onclick="if(confirm('Are you sure you want to delete your account? This cannot be undone.'))window.location.href='login.html'">
+                  <i data-lucide="trash-2" class="icon-xs"></i> Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  function switchThemeCard(t) {
+    document.getElementById('themeCardLight').classList.toggle('is-active', t === 'light');
+    document.getElementById('themeCardDark').classList.toggle('is-active',  t === 'dark');
+    try { localStorage.setItem('studentpal-theme', t); } catch(e) {}
+    document.documentElement.setAttribute('data-theme', t);
+    var btn = document.getElementById('themeToggle');
+    if (btn) btn.setAttribute('aria-pressed', String(t === 'dark'));
+  }
+  window.addEventListener('DOMContentLoaded', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    switchThemeCard(cur);
+  });
+</script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

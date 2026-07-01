@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudentPal — Everything AAUA Students Need, In One Place</title>
+  <meta name="description" content="StudentPal helps AAUA students access academic resources, opportunities, updates, and campus tools from one platform." />
+
+  <!-- Blocking theme-init: sets the theme attribute before first paint to
+       avoid a flash of the wrong theme. Reads localStorage first, then
+       falls back to the OS-level color scheme on a first-ever visit. -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('studentpal-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <!-- Favicon: simple gradient mark matching the new brand system -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563EB'/%3E%3Cstop offset='1' stop-color='%2306B6D4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+
+  <!-- Fonts: Inter for display + body, JetBrains Mono for data/utility labels -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+<body>
+
+  <!-- Soft ambient gradient, contained to the hero only -->
+  <div class="bg-decor" aria-hidden="true"></div>
+
+  <!-- ============ NAVIGATION ============ -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="#home" class="brand" aria-label="StudentPal home">
+        <span class="brand__mark" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+        <span class="brand__name">StudentPal</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#home" class="nav-links__item">Home</a>
+        <a href="#features" class="nav-links__item">Features</a>
+        <a href="#about" class="nav-links__item">About</a>
+        <a href="#contact" class="nav-links__item">Contact</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+          <i data-lucide="sun" class="theme-toggle__icon theme-toggle__icon--sun"></i>
+          <i data-lucide="moon" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+        </button>
+        <a href="login.html" class="btn btn--primary btn--sm">Get Started</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+          <i data-lucide="menu" class="nav-toggle__icon nav-toggle__icon--open"></i>
+          <i data-lucide="x" class="nav-toggle__icon nav-toggle__icon--close"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="home">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="container hero__grid">
+
+        <div class="hero__content reveal" data-reveal>
+          <p class="eyebrow"><i data-lucide="sparkles" class="icon-xs"></i>Built for AAUA students</p>
+          <h1 class="hero__headline">
+            Everything AAUA Students Need, <span class="text-gradient">In One Place</span>
+          </h1>
+          <p class="hero__sub">
+            StudentPal brings your academic resources, opportunities, and campus updates into one clean, searchable platform, no more digging through ten WhatsApp groups for a single PDF.
+          </p>
+          <div class="hero__actions">
+            <a href="login.html" class="btn btn--primary btn--lg">
+              Get Started
+              <i data-lucide="arrow-right" class="icon-sm"></i>
+            </a>
+            <a href="#showcase" class="btn btn--secondary btn--lg">
+              <i data-lucide="play" class="icon-sm"></i>
+              Live Demo
+            </a>
+          </div>
+
+          <div class="hero__trust">
+            <div class="hero__avatars" aria-hidden="true">
+              <span style="--i:0">TA</span>
+              <span style="--i:1">FO</span>
+              <span style="--i:2">DK</span>
+              <span style="--i:3">+</span>
+            </div>
+            <p>Trusted by students across every department at AAUA</p>
+          </div>
+        </div>
+
+        <!-- Product screenshot mockup -->
+        <div class="hero__visual reveal" data-reveal data-reveal-delay="1">
+          <div class="device-frame">
+            <div class="device-frame__bar">
+              <span class="dot dot--red"></span><span class="dot dot--amber"></span><span class="dot dot--green"></span>
+              <span class="device-frame__url">studentpal.app/dashboard</span>
+            </div>
+
+            <div class="mock-dash">
+              <aside class="mock-dash__side">
+                <div class="mock-dash__side-logo"><i data-lucide="graduation-cap"></i></div>
+                <span class="mock-dash__side-icon mock-dash__side-icon--active"><i data-lucide="layout-dashboard"></i></span>
+                <span class="mock-dash__side-icon"><i data-lucide="folder-open"></i></span>
+                <span class="mock-dash__side-icon"><i data-lucide="briefcase"></i></span>
+                <span class="mock-dash__side-icon"><i data-lucide="user"></i></span>
+              </aside>
+
+              <div class="mock-dash__main">
+                <div class="mock-dash__greeting">
+                  <div>
+                    <p class="mock-dash__hello">Welcome back, Tobi</p>
+                    <p class="mock-dash__meta">200L · Computer Science</p>
+                  </div>
+                  <span class="mock-dash__avatar">TA</span>
+                </div>
+
+                <div class="mock-dash__stats">
+                  <div class="mock-stat">
+                    <span class="mock-stat__num">24</span>
+                    <span class="mock-stat__label">Saved resources</span>
+                  </div>
+                  <div class="mock-stat">
+                    <span class="mock-stat__num">3</span>
+                    <span class="mock-stat__label">Pending tasks</span>
+                  </div>
+                  <div class="mock-stat mock-stat--accent">
+                    <span class="mock-stat__num">7</span>
+                    <span class="mock-stat__label">Open opportunities</span>
+                  </div>
+                </div>
+
+                <div class="mock-dash__row">
+                  <div class="mock-card mock-card--list">
+                    <p class="mock-card__title">Recent resources</p>
+                    <div class="mock-file"><i data-lucide="file-text" class="icon-xs"></i><span class="mock-file__tag">CSC 201</span>Data Structures — Week 6 notes.pdf</div>
+                    <div class="mock-file"><i data-lucide="file-text" class="icon-xs"></i><span class="mock-file__tag">MTH 201</span>Linear Algebra past questions.pdf</div>
+                    <div class="mock-file"><i data-lucide="file-text" class="icon-xs"></i><span class="mock-file__tag">GST 202</span>Logic &amp; Philosophy slides.pptx</div>
+                  </div>
+                  <div class="mock-card mock-card--opp">
+                    <p class="mock-card__title">Featured opportunity</p>
+                    <p class="mock-card__opp-name">ASUU Merit Scholarship</p>
+                    <p class="mock-card__opp-desc">Open to 200L–400L students with CGPA above 4.0</p>
+                    <span class="mock-card__badge">Closes in 5 days</span>
+                  </div>
+                </div>
+
+                <div class="mock-dash__announce"><i data-lucide="megaphone" class="icon-xs"></i>Course rep meeting moved to Friday, 4:00 PM — New Lecture Theatre</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ BUILT FOR COMPUTING STUDENTS ============ -->
+    <section class="disciplines section">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>Built for every track</p>
+          <h2 class="section-title">Built For Computing Students</h2>
+          <p class="section-sub">Whatever your specialty, your resources and opportunities are organized the way you actually study.</p>
+        </div>
+
+        <div class="discipline-grid">
+          <div class="discipline-card reveal" data-reveal>
+            <span class="discipline-card__icon"><i data-lucide="code-2"></i></span>
+            <h3>Computer Science</h3>
+            <p>Data structures, algorithms, and every CSC note, organized by level.</p>
+          </div>
+          <div class="discipline-card reveal" data-reveal data-reveal-delay="1">
+            <span class="discipline-card__icon"><i data-lucide="shield"></i></span>
+            <h3>Cyber Security</h3>
+            <p>Threat research, lab guides, and security opportunities in one feed.</p>
+          </div>
+          <div class="discipline-card reveal" data-reveal data-reveal-delay="2">
+            <span class="discipline-card__icon"><i data-lucide="server"></i></span>
+            <h3>Information Technology</h3>
+            <p>Networking, systems, and infrastructure resources, properly sorted.</p>
+          </div>
+          <div class="discipline-card reveal" data-reveal data-reveal-delay="3">
+            <span class="discipline-card__icon"><i data-lucide="terminal"></i></span>
+            <h3>Software Engineering</h3>
+            <p>Project specs, past questions, and design resources, all searchable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE CHALLENGES ============ -->
+    <section class="disciplines section">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>Built for every track</p>
+          <h2 class="section-title">THE CHALLENGES </h2>
+          <p class="section-sub">Students struggle to find resources, opportunities and important updates across multiple platforms.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============ STATS ============ -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stat-card reveal" data-reveal>
+            <span class="stat-card__num" data-counter data-target="1000" data-suffix="+">0</span>
+            <span class="stat-card__label">Resources</span>
+          </div>
+          <div class="stat-card reveal" data-reveal data-reveal-delay="1">
+            <span class="stat-card__num" data-counter data-target="500" data-suffix="+">0</span>
+            <span class="stat-card__label">Students</span>
+          </div>
+          <div class="stat-card reveal" data-reveal data-reveal-delay="2">
+            <span class="stat-card__num" data-counter data-target="24" data-suffix="/7">0</span>
+            <span class="stat-card__label">Access</span>
+          </div>
+          <div class="stat-card stat-card--icon reveal" data-reveal data-reveal-delay="3">
+            <i data-lucide="badge-check" class="stat-card__icon"></i>
+            <span class="stat-card__label">Secure platform</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROBLEM ============ -->
+    <section class="problem section" id="about">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>The problem</p>
+          <h2 class="section-title">The Student Experience Is <span class="text-gradient">Scattered</span></h2>
+          <p class="section-sub">Right now, being a student means piecing your academic life together from a dozen different places — and hoping you didn't miss something important.</p>
+        </div>
+
+        <div class="problem__grid">
+          <div class="problem-card reveal" data-reveal>
+            <span class="problem-card__icon"><i data-lucide="bell-off"></i></span>
+            <h3>Missing announcements</h3>
+            <p>Important notices get buried in WhatsApp groups and lecturer emails nobody opens until it's too late.</p>
+          </div>
+          <div class="problem-card reveal" data-reveal data-reveal-delay="1">
+            <span class="problem-card__icon"><i data-lucide="search-x"></i></span>
+            <h3>Hard-to-find resources</h3>
+            <p>Course materials are scattered across drives, group chats, and whichever senior student still has the PDF.</p>
+          </div>
+          <div class="problem-card reveal" data-reveal data-reveal-delay="2">
+            <span class="problem-card__icon"><i data-lucide="calendar-x"></i></span>
+            <h3>Lost opportunities</h3>
+            <p>Scholarships, internships, and competitions come and go before most students even hear about them.</p>
+          </div>
+          <div class="problem-card reveal" data-reveal data-reveal-delay="3">
+            <span class="problem-card__icon"><i data-lucide="shuffle"></i></span>
+            <h3>Poor organization</h3>
+            <p>No single place to track deadlines, results, or what's actually due this week — so things slip.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SOLUTION / FEATURES ============ -->
+    <section class="solution section" id="features">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>The solution</p>
+          <h2 class="section-title">Meet <span class="text-gradient">StudentPal</span></h2>
+          <p class="section-sub">One platform, built around how AAUA students actually study, search, and stay updated.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card reveal" data-reveal>
+            <span class="feature-card__icon"><i data-lucide="folder-open"></i></span>
+            <h3>Resource Hub</h3>
+            <p>Course materials organized by department and level, so you find the right note in seconds — not after scrolling forty messages back.</p>
+          </article>
+
+          <article class="feature-card reveal" data-reveal data-reveal-delay="1">
+            <span class="feature-card__icon"><i data-lucide="layout-dashboard"></i></span>
+            <h3>Student Dashboard</h3>
+            <p>A personalized overview of your academic life — saved resources, deadlines, and updates, all on one screen.</p>
+          </article>
+
+          <article class="feature-card reveal" data-reveal data-reveal-delay="2">
+            <span class="feature-card__icon"><i data-lucide="briefcase"></i></span>
+            <h3>Opportunities Board</h3>
+            <p>Scholarships, internships, and competitions, verified and posted in one feed — nothing slips past you again.</p>
+          </article>
+
+          <article class="feature-card reveal" data-reveal>
+            <span class="feature-card__icon"><i data-lucide="search"></i></span>
+            <h3>Smart Search</h3>
+            <p>Type a course code, a topic, or a lecturer's name — Smart Search finds the resource or update you mean, instantly.</p>
+          </article>
+
+          <article class="feature-card reveal" data-reveal data-reveal-delay="1">
+            <span class="feature-card__icon"><i data-lucide="megaphone"></i></span>
+            <h3>Campus Updates</h3>
+            <p>Official announcements, verified and timestamped — so you always know what's real and what's a rumor.</p>
+          </article>
+
+          <article class="feature-card reveal" data-reveal data-reveal-delay="2">
+            <span class="feature-card__icon"><i data-lucide="user"></i></span>
+            <h3>Student Profile</h3>
+            <p>Your academic identity in one place — department, level, saved resources, and applied opportunities.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCREENSHOT SHOWCASE ============ -->
+    <section class="showcase section" id="showcase">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>Inside StudentPal</p>
+          <h2 class="section-title">Built to Feel <span class="text-gradient">Effortless</span></h2>
+          <p class="section-sub">A closer look at the screens students actually live in every day.</p>
+        </div>
+
+        <!-- Showcase 1: Dashboard -->
+        <div class="showcase-row reveal" data-reveal>
+          <div class="showcase-row__visual">
+            <div class="device-frame device-frame--sm">
+              <div class="device-frame__bar">
+                <span class="dot dot--red"></span><span class="dot dot--amber"></span><span class="dot dot--green"></span>
+                <span class="device-frame__url">studentpal.app/dashboard</span>
+              </div>
+              <div class="mini-mock mini-mock--dashboard">
+                <div class="mini-mock__greet">Good morning, Faith</div>
+                <div class="mini-mock__tiles">
+                  <div class="mini-tile"><span>12</span>Saved</div>
+                  <div class="mini-tile"><span>2</span>Due soon</div>
+                  <div class="mini-tile mini-tile--accent"><span>5</span>New</div>
+                </div>
+                <div class="mini-mock__bar"></div>
+                <div class="mini-mock__bar mini-mock__bar--short"></div>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-row__text">
+            <span class="showcase-row__num">Student Dashboard</span>
+            <h3>Your whole semester, at a glance</h3>
+            <p>The moment you log in, you see what matters: saved resources, what's due soon, and what's new — no hunting required.</p>
+          </div>
+        </div>
+
+        <!-- Showcase 2: Resources -->
+        <div class="showcase-row showcase-row--reverse reveal" data-reveal>
+          <div class="showcase-row__visual">
+            <div class="device-frame device-frame--sm">
+              <div class="device-frame__bar">
+                <span class="dot dot--red"></span><span class="dot dot--amber"></span><span class="dot dot--green"></span>
+                <span class="device-frame__url">studentpal.app/resources</span>
+              </div>
+              <div class="mini-mock mini-mock--resources">
+                <div class="mini-mock__search"><i data-lucide="search" class="icon-xs"></i>Search course, topic, lecturer…</div>
+                <div class="mini-mock__file"><i data-lucide="file-text" class="icon-xs"></i><span class="mini-mock__file-tag">CSC 301</span>Software Engineering — Slides 1–10</div>
+                <div class="mini-mock__file"><i data-lucide="file-text" class="icon-xs"></i><span class="mini-mock__file-tag">PHY 101</span>Mechanics tutorial questions.pdf</div>
+                <div class="mini-mock__file"><i data-lucide="file-text" class="icon-xs"></i><span class="mini-mock__file-tag">ACC 201</span>Financial Accounting — Past Q's</div>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-row__text">
+            <span class="showcase-row__num">Resource Page</span>
+            <h3>Every course, organized properly</h3>
+            <p>Materials are sorted by department, course code, and level — so 200L Computer Science notes never get mixed up with 300L Accounting slides.</p>
+          </div>
+        </div>
+
+        <!-- Showcase 3: Opportunities -->
+        <div class="showcase-row reveal" data-reveal>
+          <div class="showcase-row__visual">
+            <div class="device-frame device-frame--sm">
+              <div class="device-frame__bar">
+                <span class="dot dot--red"></span><span class="dot dot--amber"></span><span class="dot dot--green"></span>
+                <span class="device-frame__url">studentpal.app/opportunities</span>
+              </div>
+              <div class="mini-mock mini-mock--opps">
+                <div class="mini-opp"><span class="mini-opp__type"><i data-lucide="briefcase" class="icon-xs"></i>Scholarship</span><p>MTN Foundation STEM Grant</p><span class="mini-opp__deadline">8 days left</span></div>
+                <div class="mini-opp"><span class="mini-opp__type mini-opp__type--alt"><i data-lucide="briefcase" class="icon-xs"></i>Internship</span><p>Andela Frontend Internship</p><span class="mini-opp__deadline">2 weeks left</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-row__text">
+            <span class="showcase-row__num">Opportunities Page</span>
+            <h3>Never miss a deadline again</h3>
+            <p>Scholarships, internships, and competitions are verified, tagged, and sorted by how soon they close.</p>
+          </div>
+        </div>
+
+        <!-- Showcase 4: Profile -->
+        <div class="showcase-row showcase-row--reverse reveal" data-reveal>
+          <div class="showcase-row__visual">
+            <div class="device-frame device-frame--sm">
+              <div class="device-frame__bar">
+                <span class="dot dot--red"></span><span class="dot dot--amber"></span><span class="dot dot--green"></span>
+                <span class="device-frame__url">studentpal.app/profile</span>
+              </div>
+              <div class="mini-mock mini-mock--profile">
+                <div class="mini-mock__profile-head">
+                  <span class="mini-mock__profile-avatar">DK</span>
+                  <div>
+                    <p class="mini-mock__profile-name">David Okunade</p>
+                    <p class="mini-mock__profile-meta">400L · Economics</p>
+                  </div>
+                </div>
+                <div class="mini-mock__profile-stats">
+                  <div><span>31</span>Downloads</div>
+                  <div><span>6</span>Applied</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-row__text">
+            <span class="showcase-row__num">User Profile</span>
+            <h3>One identity, your whole journey</h3>
+            <p>Department, level, saved resources, and every opportunity you've applied to — your academic record of activity in one place.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ BENEFITS / COMPARISON ============ -->
+    <section class="benefits section">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>Why it matters</p>
+          <h2 class="section-title">The Difference Is <span class="text-gradient">Immediate</span></h2>
+        </div>
+
+        <div class="compare reveal" data-reveal>
+          <div class="compare__col compare__col--without">
+            <h3 class="compare__title">Without StudentPal</h3>
+            <ul class="compare__list">
+              <li><span class="compare__icon compare__icon--no"><i data-lucide="x" class="icon-xs"></i></span>Scattered information across apps and group chats</li>
+              <li><span class="compare__icon compare__icon--no"><i data-lucide="x" class="icon-xs"></i></span>Missed opportunities you find out about too late</li>
+              <li><span class="compare__icon compare__icon--no"><i data-lucide="x" class="icon-xs"></i></span>Time wasted searching instead of studying</li>
+            </ul>
+          </div>
+
+          <div class="compare__divider" aria-hidden="true">
+            <span>VS</span>
+          </div>
+
+          <div class="compare__col compare__col--with">
+            <h3 class="compare__title">With StudentPal</h3>
+            <ul class="compare__list">
+              <li><span class="compare__icon compare__icon--yes"><i data-lucide="check" class="icon-xs"></i></span>Organized resources sorted by course and level</li>
+              <li><span class="compare__icon compare__icon--yes"><i data-lucide="check" class="icon-xs"></i></span>Easy access to verified updates and opportunities</li>
+              <li><span class="compare__icon compare__icon--yes"><i data-lucide="check" class="icon-xs"></i></span>Better productivity with everything in one place</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="testimonials section">
+      <div class="container">
+        <div class="section-head reveal" data-reveal>
+          <p class="eyebrow eyebrow--center"><i data-lucide="layers" class="icon-xs"></i>From the students</p>
+          <h2 class="section-title">What They're <span class="text-gradient">Saying</span></h2>
+        </div>
+
+        <div class="testimonial-grid">
+          <figure class="testimonial-card reveal" data-reveal>
+            <i data-lucide="quote" class="testimonial-card__quote"></i>
+            <blockquote>I used to lose track of scholarship deadlines completely. Now I get notified the day they're posted — I've applied to three this semester alone.</blockquote>
+            <figcaption>
+              <span class="testimonial-card__avatar">TA</span>
+              <div>
+                <p class="testimonial-card__name">Tobi Adebayo</p>
+                <p class="testimonial-card__role">300L, Computer Science</p>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="testimonial-card reveal" data-reveal data-reveal-delay="1">
+            <i data-lucide="quote" class="testimonial-card__quote"></i>
+            <blockquote>Finding past questions used to mean begging final year students for their old WhatsApp files. Smart Search just finds them now. It's that simple.</blockquote>
+            <figcaption>
+              <span class="testimonial-card__avatar">FO</span>
+              <div>
+                <p class="testimonial-card__name">Faith Olawale</p>
+                <p class="testimonial-card__role">200L, Microbiology</p>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="testimonial-card reveal" data-reveal data-reveal-delay="2">
+            <i data-lucide="quote" class="testimonial-card__quote"></i>
+            <blockquote>As a course rep, getting announcements to actually reach people was a nightmare. With StudentPal, everyone sees it the same day — verified, no confusion.</blockquote>
+            <figcaption>
+              <span class="testimonial-card__avatar">DK</span>
+              <div>
+                <p class="testimonial-card__name">David Okunade</p>
+                <p class="testimonial-card__role">400L, Economics</p>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="cta" id="join">
+      <div class="container cta__inner reveal" data-reveal>
+        <h2 class="cta__title">Start Simplifying Student Life <span class="text-gradient">Today</span></h2>
+        <p class="cta__sub">Join hundreds of AAUA students already studying, searching, and staying updated in one place.</p>
+        <div class="cta__actions">
+          <a href="#join" class="btn btn--primary btn--lg">Join Now <i data-lucide="arrow-right" class="icon-sm"></i></a>
+          <a href="#contact" class="btn btn--secondary btn--lg"><i data-lucide="mail" class="icon-sm"></i>Contact Us</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" id="contact">
+    <div class="container footer__inner">
+
+      <div class="footer__brand">
+        <a href="#home" class="brand" aria-label="StudentPal home">
+          <span class="brand__mark" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+          <span class="brand__name">StudentPal</span>
+        </a>
+        <p class="footer__tagline">Everything AAUA students need, in one place.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="StudentPal on X / Twitter" class="footer__social-link"><i data-lucide="at-sign" class="icon-sm"></i></a>
+          <a href="#" aria-label="StudentPal on Instagram" class="footer__social-link"><i data-lucide="camera" class="icon-sm"></i></a>
+          <a href="#" aria-label="StudentPal on WhatsApp" class="footer__social-link"><i data-lucide="send" class="icon-sm"></i></a>
+        </div>
+      </div>
+
+      <nav class="footer__col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="#showcase">Showcase</a>
+        <a href="login.html">Get Started</a>
+      </nav>
+
+      <nav class="footer__col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@studentpal.app"><i data-lucide="mail" class="icon-xs"></i>hello@studentpal.app</a>
+        <a href="tel:+2348000000000"><i data-lucide="phone" class="icon-xs"></i>+234 800 000 0000</a>
+        <span class="footer__static"><i data-lucide="map-pin" class="icon-xs"></i>Akungba-Akoko, Ondo State, Nigeria</span>
+      </nav>
+
+    </div>
+
+    <div class="footer__bottom">
+      <div class="container footer__bottom-inner">
+        <p>© <span id="year"></span> StudentPal. All rights reserved.</p>
+        <p class="footer__credit">Built for AAUA students, by students.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i data-lucide="arrow-up" class="icon-sm"></i>
+  </button>
+
+  <!-- Lucide icon library (vanilla, no build step) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

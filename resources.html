@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — StudentPal</title>
+  <script>(function(){try{var t=localStorage.getItem('studentpal-theme')||( window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})()</script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2306B6D4'/%3E%3Cstop offset='1' stop-color='%232563EB'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__top">
+      <a href="dashboard.html" class="brand"><span class="brand__mark"><i data-lucide="graduation-cap"></i></span><span class="brand__name">StudentPal</span></a>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i data-lucide="x"></i></button>
+    </div>
+    <nav class="sidebar__nav" aria-label="Main navigation">
+      <a href="dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+      <a href="resources.html" class="nav-item is-active" aria-current="page"><i data-lucide="folder-open"></i><span>Resources</span></a>
+      <a href="announcements.html" class="nav-item"><i data-lucide="megaphone"></i><span>Announcements</span></a>
+      <a href="opportunities.html" class="nav-item"><i data-lucide="briefcase"></i><span>Opportunities</span></a>
+      <a href="community.html" class="nav-item"><i data-lucide="users"></i><span>Community</span></a>
+      <a href="assignments.html" class="nav-item"><i data-lucide="clipboard-list"></i><span>Assignments</span></a>
+      <a href="calendar.html" class="nav-item"><i data-lucide="calendar-days"></i><span>Academic Calendar</span></a>
+      <a href="settings.html" class="nav-item"><i data-lucide="settings"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar__profile">
+      <span class="sidebar__profile-avatar">AR</span>
+      <div class="sidebar__profile-info">
+        <p class="sidebar__profile-name">Alienrocky</p>
+        <p class="sidebar__profile-meta">Computer Science · 200L</p>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app__body">
+
+    <!-- TOPBAR -->
+    <header class="topbar" id="topbar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu" aria-expanded="false"><i data-lucide="menu" class="icon-sm"></i></button>
+      <div class="topbar__info">
+        <p class="topbar__greeting" id="greeting">Good Morning, Alien 👋</p>
+        <p class="topbar__datetime" id="topbarDatetime"></p>
+      </div>
+      <div class="topbar__search">
+        <i data-lucide="search" class="icon-sm"></i>
+        <input type="text" placeholder="Search across StudentPal…" aria-label="Global search" />
+      </div>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+          <i data-lucide="sun"  class="tt-icon tt-icon--sun"></i>
+          <i data-lucide="moon" class="tt-icon tt-icon--moon"></i>
+        </button>
+        <div class="dropdown">
+          <button class="icon-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false">
+            <i data-lucide="bell" class="icon-sm"></i>
+            <span class="icon-btn__badge">3</span>
+          </button>
+          <div class="dropdown__panel" id="notifPanel" role="menu">
+            <p class="dropdown__head">Notifications</p>
+            <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="megaphone" class="icon-xs"></i>New CSC Department announcement</a>
+            <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="briefcase" class="icon-xs"></i>MTN Scholarship closes in 2 days</a>
+            <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="users" class="icon-xs"></i>New reply on your community post</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="topbar-avatar" id="avatarBtn" aria-label="Account menu" aria-expanded="false">AR</button>
+          <div class="dropdown__panel" id="avatarPanel" role="menu">
+            <div style="padding:var(--s3);border-bottom:1px solid var(--color-border)">
+              <p style="font-weight:600;font-size:.88rem">Alienrocky</p>
+              <p style="font-size:.74rem;color:var(--color-text-faint)">alienrocky@aaua.edu.ng</p>
+            </div>
+            <a href="settings.html" class="dropdown__item" role="menuitem"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+            <div class="dropdown__divider"></div>
+            <a href="login.html" class="dropdown__item dropdown__item--danger" role="menuitem"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="app__content" id="resourcesPage">
+      <div class="page-header">
+        <h1>Resources</h1>
+        <p>Browse, search, and download academic materials for every course.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-primary-soft);color:var(--color-primary)"><i data-lucide="files" class="icon-md"></i></div>
+          <p class="stat-box__num">1,240</p>
+          <p class="stat-box__label">Total Resources</p>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-blue-soft);color:var(--color-blue)"><i data-lucide="download" class="icon-md"></i></div>
+          <p class="stat-box__num">48.2k</p>
+          <p class="stat-box__label">Total Downloads</p>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box__icon" style="background:var(--color-success-soft);color:var(--color-success)"><i data-lucide="bookmark" class="icon-md"></i></div>
+          <p class="stat-box__num">37</p>
+          <p class="stat-box__label">Saved by You</p>
+        </div>
+        
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar__search">
+          <i data-lucide="search" class="icon-sm"></i>
+          <input type="text" id="resourceSearch" placeholder="Search by title or course code…" aria-label="Search resources" />
+        </div>
+        <select class="filter-select" id="filterLevel" aria-label="Filter by level">
+          <option value="">All Levels</option>
+          <option value="100">100 Level</option>
+          <option value="200">200 Level</option>
+          <option value="300">300 Level</option>
+          <option value="400">400 Level</option>
+        </select>
+        <select class="filter-select" id="filterDept" aria-label="Filter by department">
+          <option value="">All Departments</option>
+          <option value="csc">Computer Science</option>
+          <option value="mth">Mathematics</option>
+          <option value="phy">Physics</option>
+          <option value="gst">General Studies</option>
+          <option value="eco">Economics</option>
+        </select>
+        <select class="filter-select" id="filterType" aria-label="Filter by type">
+          <option value="">All Types</option>
+          <option value="past-q">Past Questions</option>
+          <option value="notes">Lecture Notes</option>
+          <option value="handout">Handout</option>
+          <option value="ebook">E-book</option>
+        </select>
+      </div>
+
+      <div class="resources-grid">
+
+        <article class="resource-card" data-level="200" data-dept="csc" data-type="past-q" data-title="Data Structures Past Questions" data-course="CSC 201">
+          <div class="resource-card__thumb resource-card__thumb--pdf">📄</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>CSC 201</p>
+            <h3 class="resource-card__title">Data Structures Past Questions (2019–2024)</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>342</span>
+              <span class="badge badge--red">PDF</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Jun 10</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="200" data-dept="mth" data-type="notes" data-title="Linear Algebra Notes" data-course="MTH 201">
+          <div class="resource-card__thumb resource-card__thumb--doc">📝</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>MTH 201</p>
+            <h3 class="resource-card__title">Linear Algebra — Complete Lecture Notes</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>218</span>
+              <span class="badge badge--blue">DOCX</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Jun 5</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="100" data-dept="phy" data-type="past-q" data-title="Mechanics Past Questions" data-course="PHY 101">
+          <div class="resource-card__thumb resource-card__thumb--pdf">📄</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>PHY 101</p>
+            <h3 class="resource-card__title">Mechanics &amp; Motion Past Questions</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>176</span>
+              <span class="badge badge--red">PDF</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>May 28</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="200" data-dept="gst" data-type="handout" data-title="Logic and Philosophy Handout" data-course="GST 202">
+          <div class="resource-card__thumb resource-card__thumb--ppt">📋</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>GST 202</p>
+            <h3 class="resource-card__title">Logic &amp; Philosophy Comprehensive Handout</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>156</span>
+              <span class="badge badge--amber">PPT</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Jun 1</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="300" data-dept="csc" data-type="ebook" data-title="Introduction to Algorithms CLRS" data-course="CSC 301">
+          <div class="resource-card__thumb resource-card__thumb--ebook">📚</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>CSC 301</p>
+            <h3 class="resource-card__title">Introduction to Algorithms (CLRS, 4th Ed.)</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>503</span>
+              <span class="badge badge--green">E-book</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Apr 15</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="200" data-dept="csc" data-type="notes" data-title="Object Oriented Programming Notes" data-course="CSC 203">
+          <div class="resource-card__thumb resource-card__thumb--doc">📝</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>CSC 203</p>
+            <h3 class="resource-card__title">Object-Oriented Programming — Full Notes</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>289</span>
+              <span class="badge badge--blue">DOCX</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Jun 8</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="200" data-dept="eco" data-type="past-q" data-title="Microeconomics Past Questions" data-course="ECO 202">
+          <div class="resource-card__thumb resource-card__thumb--pdf">📄</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>ECO 202</p>
+            <h3 class="resource-card__title">Microeconomics Past Questions (5 Years)</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>134</span>
+              <span class="badge badge--red">PDF</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>May 20</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+        <article class="resource-card" data-level="300" data-dept="csc" data-type="handout" data-title="Computer Networks Handout" data-course="CSC 305">
+          <div class="resource-card__thumb resource-card__thumb--ppt">📋</div>
+          <div class="resource-card__body">
+            <p class="resource-card__course"><i data-lucide="tag" class="icon-xs"></i>CSC 305</p>
+            <h3 class="resource-card__title">Computer Networks — Week 1–8 Handout</h3>
+            <div class="resource-card__meta">
+              <span class="resource-card__meta-item"><i data-lucide="download" class="icon-xs"></i>198</span>
+              <span class="badge badge--amber">PDF</span>
+              <span class="resource-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Jun 12</span>
+            </div>
+            <a href="#" class="btn btn--primary btn--block btn--sm"><i data-lucide="download" class="icon-xs"></i>Download</a>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+  </div>
+</div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

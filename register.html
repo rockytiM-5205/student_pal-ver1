@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — StudentPal</title>
+  <meta name="description" content="Create your StudentPal account and join thousands of students using StudentPal." />
+
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('studentpal-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563EB'/%3E%3Cstop offset='1' stop-color='%2306B6D4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/auth.css" />
+</head>
+<body class="auth-body auth-body--register page-enter">
+
+  <button class="theme-toggle theme-toggle--floating" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+    <i data-lucide="sun" class="theme-toggle__icon theme-toggle__icon--sun"></i>
+    <i data-lucide="moon" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+  </button>
+
+  <main class="register-shell">
+
+    <div class="register-head">
+      <a href="index.html" class="brand">
+        <span class="brand__mark"><i data-lucide="graduation-cap"></i></span>
+        <span class="brand__name">StudentPal</span>
+      </a>
+      <h1>Create Your StudentPal Account</h1>
+      <p>Join thousands of students using StudentPal.</p>
+    </div>
+
+    <div class="auth-card auth-card--wide glass">
+
+      <form id="registerForm" novalidate>
+
+        <fieldset class="form-section">
+          <legend>Personal Information</legend>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="firstName">First Name</label>
+              <div class="field__control">
+                <i data-lucide="user" class="field__icon icon-sm"></i>
+                <input type="text" id="firstName" name="firstName" placeholder="Agbaje" autocomplete="given-name" aria-describedby="firstNameError" required />
+              </div>
+              <p class="field__error" id="firstNameError" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <label for="lastName">Last Name</label>
+              <div class="field__control">
+                <i data-lucide="user" class="field__icon icon-sm"></i>
+                <input type="text" id="lastName" name="lastName" placeholder="Peter" autocomplete="family-name" aria-describedby="lastNameError" required />
+              </div>
+              <p class="field__error" id="lastNameError" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="username">Username</label>
+              <div class="field__control">
+                <i data-lucide="at-sign" class="field__icon icon-sm"></i>
+                <input type="text" id="username" name="username" placeholder="alienrocky" autocomplete="username" aria-describedby="usernameError" required />
+              </div>
+              <p class="field__error" id="usernameError" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <label for="registerEmail">Email Address</label>
+              <div class="field__control">
+                <i data-lucide="mail" class="field__icon icon-sm"></i>
+                <input type="email" id="registerEmail" name="email" placeholder="alienrocky@aaua.edu.ng" autocomplete="email" aria-describedby="registerEmailError" required />
+              </div>
+              <p class="field__error" id="registerEmailError" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <div class="field__control">
+              <i data-lucide="phone" class="field__icon icon-sm"></i>
+              <input type="tel" id="phone" name="phone" placeholder="+234 800 000 0000" autocomplete="tel" aria-describedby="phoneError" required />
+            </div>
+            <p class="field__error" id="phoneError" role="alert"></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend>Academic Information</legend>
+
+          <div class="field">
+            <label for="university">University</label>
+            <div class="field__control field__control--select">
+              <select id="university" name="university" required>
+                <option value="aaua" selected>Adekunle Ajasin University Akungba (AAUA)</option>
+                <option value="unilag">University of Lagos (UNILAG)</option>
+                <option value="oau">Obafemi Awolowo University (OAU)</option>
+                <option value="ui">University of Ibadan (UI)</option>
+                <option value="futa">Federal University of Technology Akure (FUTA)</option>
+              </select>
+              <i data-lucide="chevron-down" class="field__chevron icon-sm"></i>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="faculty">Faculty</label>
+              <div class="field__control field__control--select">
+                <select id="faculty" name="faculty" required>
+                  <option value="" disabled selected>Select faculty</option>
+                  <option value="science">Faculty of Science</option>
+                  <option value="arts">Faculty of Arts</option>
+                  <option value="sms">Faculty of Social &amp; Management Sciences</option>
+                  <option value="law">Faculty of Law</option>
+                  <option value="education">Faculty of Education</option>
+                  <option value="agriculture">Faculty of Agriculture</option>
+                </select>
+                <i data-lucide="chevron-down" class="field__chevron icon-sm"></i>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="department">Department</label>
+              <div class="field__control field__control--select">
+                <select id="department" name="department" required>
+                  <option value="" disabled selected>Select department</option>
+                  <option value="csc">Computer Science</option>
+                  <option value="cyb">Cyber Security</option>
+                  <option value="it">Information Technology</option>
+                  <option value="swe">Software Engineering</option>
+                  <option value="mcb">Microbiology</option>
+                  <option value="eco">Economics</option>
+                  <option value="acc">Accounting</option>
+                  <option value="mac">Mass Communication</option>
+                  <option value="phy">Physics</option>
+                  <option value="mth">Mathematics</option>
+                  <option value="eng">English Language</option>
+                  <option value="pol">Political Science</option>
+                </select>
+                <i data-lucide="chevron-down" class="field__chevron icon-sm"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="level">Level</label>
+            <div class="field__control field__control--select">
+              <select id="level" name="level" required>
+                <option value="" disabled selected>Select level</option>
+                <option value="100">100 Level</option>
+                <option value="200">200 Level</option>
+                <option value="300">300 Level</option>
+                <option value="400">400 Level</option>
+                <option value="500">500 Level</option>
+              </select>
+              <i data-lucide="chevron-down" class="field__chevron icon-sm"></i>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend>Account Security</legend>
+
+          <div class="field">
+            <label for="registerPassword">Password</label>
+            <div class="field__control">
+              <i data-lucide="lock" class="field__icon icon-sm"></i>
+              <input type="password" id="registerPassword" name="password" placeholder="Create a password" autocomplete="new-password" aria-describedby="pwRequirements" required />
+              <button type="button" class="field__toggle" data-toggle-for="registerPassword" aria-label="Show password">
+                <i data-lucide="eye" class="icon-sm"></i>
+              </button>
+            </div>
+            <ul class="pw-requirements" id="pwRequirements">
+              <li data-rule="length"><i data-lucide="check" class="icon-xs"></i>At least 8 characters</li>
+              <li data-rule="uppercase"><i data-lucide="check" class="icon-xs"></i>One uppercase letter</li>
+              <li data-rule="lowercase"><i data-lucide="check" class="icon-xs"></i>One lowercase letter</li>
+              <li data-rule="number"><i data-lucide="check" class="icon-xs"></i>One number</li>
+            </ul>
+          </div>
+
+          <div class="field">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="field__control">
+              <i data-lucide="lock" class="field__icon icon-sm"></i>
+              <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password" aria-describedby="confirmPasswordHint" required />
+              <button type="button" class="field__toggle" data-toggle-for="confirmPassword" aria-label="Show password">
+                <i data-lucide="eye" class="icon-sm"></i>
+              </button>
+            </div>
+            <p class="field__hint" id="confirmPasswordHint" role="status"></p>
+          </div>
+        </fieldset>
+
+        <label class="checkbox checkbox--agreement">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" required />
+          <span class="checkbox__box"></span>
+          <span class="checkbox__text">I agree to the <a href="#">Terms and Conditions</a></span>
+        </label>
+        <p class="field__error" id="agreeTermsError" role="alert"></p>
+
+        <button type="submit" class="btn btn--primary btn--block btn--lg" id="registerSubmit">
+          <span class="btn__label">Create Account</span>
+          <span class="btn__spinner" aria-hidden="true"></span>
+        </button>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <button type="button" class="btn btn--google btn--block btn--lg">
+          <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.6 20.5H42V20.4H24v7.2h11.3c-1.6 4.6-6 7.9-11.3 7.9-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.1-5.1C33.5 6.1 29 4.4 24 4.4 13.2 4.4 4.4 13.2 4.4 24S13.2 43.6 24 43.6 43.6 34.8 43.6 24c0-1.2-.1-2.4-.4-3.5z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13.2 24 13.2c3.1 0 5.8 1.1 8 3l5.1-5.1C33.5 6.1 29 4.4 24 4.4c-7.6 0-14.1 4.3-17.7 10.3z"/>
+            <path fill="#4CAF50" d="M24 43.6c4.9 0 9.4-1.9 12.8-4.9l-5.9-5c-2 1.4-4.6 2.3-6.9 2.3-5.3 0-9.7-3.3-11.3-7.9l-6.5 5C9.8 39.3 16.3 43.6 24 43.6z"/>
+            <path fill="#1976D2" d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.2 4.2-4.1 5.6l5.9 5C40.6 35.1 43.6 30 43.6 24c0-1.2-.1-2.4-.4-3.5z"/>
+          </svg>
+          Continue with Google
+        </button>
+      </form>
+
+      <p class="auth-card__footer">Already have an account? <a href="login.html" data-page-link>Sign In</a></p>
+    </div>
+
+  </main>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/register.js"></script>
+  
+</body>
+</html>
