@@ -164,36 +164,28 @@ Version Control
 
 📂 Project Structure
 
-StudentPal/
-│
-├── frontend/
-│   ├── index.html
-│   ├── login.html
-│   ├── register.html
-│   ├── student-dashboard.html
-│   ├── admin-dashboard.html
-│   ├── resources.html
-│   ├── announcements.html
-│   ├── opportunities.html
-│   ├── assignments.html
-│   ├── academic-calendar.html
-│   ├── settings.html
-│   │
-│   ├── css/
-│   ├── js/
-│   └── assets/
-│
-├── backend/
-│   ├── accounts/
-│   ├── resources/
-│   ├── announcements/
-│   ├── opportunities/
-│   ├── community/
-│   └── manage.py
-│
-└── README.md
+StudentPal
+frontend
+    index.html
+    login.html
+    register.html
+    student-dashboard.html
+    admin-dashboard.html
+    resources.html
+    announcements.html
+    opportunities.html
+    assignments.html
+    academic-calendar.html
+    settings.html
+backend
+    accounts
+    resources
+    announcements
+    opportunities
+    community
+    manage.py
+README.md
 
----
 
 ⚙️ Installation
 
