@@ -255,25 +255,32 @@
       body:    JSON.stringify({ email: email, password: password }),
     });
 
-    var data = await response.json();
+    // Safe parse — response.json() throws "Unexpected token <"
+    // if the server returns HTML (e.g. Django 404/500 debug page).
+    var rawText = await response.text();
+    var data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (_) {
+      console.error("[StudentPal] Non-JSON response (" + response.status + "):", rawText.slice(0, 400));
+      if (response.status === 404) {
+        showToast("API not found (404). Add path(\"api/\", include(\"accounts.urls\")) to your root urls.py.", "error");
+      } else if (response.status === 500) {
+        showToast("Django server error (500). Check your terminal for the Python traceback.", "error");
+      } else {
+        showToast("Unexpected server response (" + response.status + "). Check the browser console.", "error");
+      }
+      return null;
+    }
 
     if (!response.ok) {
       var serverErrors = data.errors || {};
       var nonField     = serverErrors.non_field_errors;
-
       if (nonField) {
-        // Wrong email or password
         showToast(Array.isArray(nonField) ? nonField[0] : nonField, "error");
       } else {
         if (serverErrors.email)    setFieldError(emailInput,    emailError,    serverErrors.email[0]);
         if (serverErrors.password) setFieldError(passwordInput, passwordError, serverErrors.password[0]);
-
-        // 404 — URL is wrong
-        if (response.status === 404) {
-          showToast("Login endpoint not found (404). Check that /api/login/ is registered in core/urls.py.", "error");
-          return null;
-        }
-
         if (!serverErrors.email && !serverErrors.password) {
           showToast(data.message || "Login failed. Please try again.", "error");
         }

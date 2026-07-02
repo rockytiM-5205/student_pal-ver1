@@ -18,7 +18,7 @@
   "use strict";
 
   /* ── CONFIG ────────────────────────────────────────────────────────────── */
-  const API_BASE = "http://127.0.0.1:8000/api"; // swap for production URL
+  const API_BASE = "http://127.0.0.1:8000"; // swap for production URL
 
   const ENDPOINTS = {
     register: `${API_BASE}/api/register/`,

@@ -22,7 +22,7 @@
   "use strict";
 
   /* ── CONFIG ────────────────────────────────────────────────────────────── */
-  const API_BASE    = "http://127.0.0.1:8000/api"; // change for production
+  const API_BASE    = "http://127.0.0.1:8000"; // change for production
   const LOGIN_PAGE  = "login.html";
 
   const STORAGE = {
