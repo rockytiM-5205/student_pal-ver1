@@ -1,0 +1,4 @@
+.env
+student/
+*.pyc
+__pycache__/

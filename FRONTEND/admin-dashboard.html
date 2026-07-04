@@ -98,7 +98,7 @@
             </div>
             <div class="dp-divider"></div>
             <a href="#" class="dp-item" data-page-link="settings"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
-            <a href="login.html" class="dp-item" style="color:var(--red)"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+            <a href="#" class="dp-item" style="color:var(--red)" data-logout aria-label="Log out"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
           </div>
         </div>
       </div>
@@ -530,7 +530,7 @@
           <div class="settings-panel" style="border-color:var(--red-soft)">
             <div class="settings-panel__head"><h2 style="color:var(--red)">Danger Zone</h2><p>Irreversible actions — proceed with extreme caution.</p></div>
             <div class="settings-panel__body">
-              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s4)"><div><h3 style="font-size:.88rem;font-weight:600">Log Out Admin Session</h3><p style="font-size:.78rem;color:var(--text-f);margin-top:2px">End your current admin session securely.</p></div><a href="login.html" class="btn btn--outline btn--sm"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s4)"><div><h3 style="font-size:.88rem;font-weight:600">Log Out Admin Session</h3><p style="font-size:.78rem;color:var(--text-f);margin-top:2px">End your current admin session securely.</p></div><a href="#" class="btn btn--outline btn--sm" data-logout aria-label="Log out"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a></div>
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--s4);padding-top:var(--s5);border-top:1px solid var(--red-soft)"><div><h3 style="font-size:.88rem;font-weight:600;color:var(--red)">Reset All Student Data</h3><p style="font-size:.78rem;color:var(--text-f);margin-top:2px">Wipe all student records. This cannot be undone.</p></div><button class="btn btn--danger btn--sm" onclick="if(confirm('This will permanently delete all student data. Are you absolutely sure?'))showToast('Action blocked. Contact system architect.','error')"><i data-lucide="alert-triangle" class="icon-xs"></i>Reset Data</button></div>
             </div>
           </div>

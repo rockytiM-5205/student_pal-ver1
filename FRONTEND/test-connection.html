@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudentPal — Connection Diagnostic</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: #0f172a; color: #f1f5f9;
+      min-height: 100vh; padding: 2rem;
+    }
+    h1 { font-size: 1.4rem; margin-bottom: .5rem; color: #22d3ee; }
+    p.sub { font-size: .85rem; color: #94a3b8; margin-bottom: 2rem; }
+
+    .card {
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
+    }
+    .card h2 { font-size: .9rem; margin-bottom: 1rem; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: .06em; font-family: monospace; }
+
+    .check {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .75rem 0; border-top: 1px solid #334155; font-size: .88rem;
+    }
+    .check:first-of-type { border-top: none; }
+
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .dot--wait   { background: #475569; animation: pulse 1.2s ease-in-out infinite; }
+    .dot--ok     { background: #4ade80; }
+    .dot--warn   { background: #fbbf24; }
+    .dot--fail   { background: #f87171; }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    .check-label { font-weight: 600; }
+    .check-detail { font-size: .78rem; color: #94a3b8; margin-top: 3px; font-family: monospace; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #22d3ee; color: #0f172a; font-weight: 700;
+      border: none; border-radius: 8px; padding: .65rem 1.4rem;
+      font-size: .9rem; cursor: pointer; margin-top: 1.5rem;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .fix {
+      background: #1a2744; border: 1px solid #22d3ee44;
+      border-radius: 8px; padding: 1rem; margin-top: .75rem;
+      font-size: .82rem; line-height: 1.6; display: none;
+    }
+    .fix.visible { display: block; }
+    .fix code {
+      display: block; background: #0f172a; border-radius: 6px;
+      padding: .6rem .9rem; margin: .5rem 0; font-family: monospace;
+      font-size: .8rem; color: #4ade80; white-space: pre;
+    }
+    .fix strong { color: #fbbf24; }
+
+    .url-display {
+      font-family: monospace; font-size: .8rem;
+      background: #0f172a; border-radius: 6px;
+      padding: .5rem .75rem; color: #22d3ee; margin-top: .5rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🔍 StudentPal Connection Diagnostic</h1>
+<p class="sub">Open this file with Live Server, then click Run Checks to find exactly what's broken.</p>
+
+<div class="card">
+  <h2>Environment</h2>
+  <div class="check">
+    <span class="dot dot--wait" id="dot-protocol"></span>
+    <div>
+      <div class="check-label" id="lbl-protocol">Checking how this page is served…</div>
+      <div class="check-detail" id="det-protocol"></div>
+      <div class="fix" id="fix-protocol">
+        <strong>❌ You are opening the file directly (file://)</strong><br/>
+        Browsers block all fetch() calls from <code>file://</code> to <code>http://</code> — this is why you see "Cannot connect".<br/>
+        <strong>Fix:</strong> Install the Live Server extension in VSCode, right-click this file → <strong>Open with Live Server</strong>.<br/>
+        The URL in your browser should start with <code>http://127.0.0.1:5500</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Django Server</h2>
+  <div class="check">
+    <span class="dot dot--wait" id="dot-django"></span>
+    <div>
+      <div class="check-label" id="lbl-django">Checking Django on port 8000…</div>
+      <div class="check-detail" id="det-django"></div>
+      <div class="fix" id="fix-django">
+        <strong>❌ Django is not running or not on port 8000</strong><br/>
+        Open a terminal in your project folder and run:
+        <code>python manage.py runserver</code>
+        You should see: <code>Starting development server at http://127.0.0.1:8000/</code><br/>
+        Then click Run Checks again.
+      </div>
+    </div>
+  </div>
+
+  <div class="check">
+    <span class="dot dot--wait" id="dot-cors"></span>
+    <div>
+      <div class="check-label" id="lbl-cors">Checking CORS headers…</div>
+      <div class="check-detail" id="det-cors"></div>
+      <div class="fix" id="fix-cors">
+        <strong>❌ CORS is blocking your frontend</strong><br/>
+        In your <strong>settings.py</strong>, make sure you have:
+        <code>INSTALLED_APPS = [
+    ...
+    "corsheaders",
+    ...
+]
+
+MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # ← MUST be first
+    "django.middleware.security.SecurityMiddleware",
+    ...
+]
+
+CORS_ALLOW_ALL_ORIGINS = True   # ← add this line</code>
+        Then <strong>restart Django</strong> (Ctrl+C, then python manage.py runserver).
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>API Endpoints</h2>
+  <div class="check">
+    <span class="dot dot--wait" id="dot-login-url"></span>
+    <div>
+      <div class="check-label" id="lbl-login-url">Checking /api/login/ exists…</div>
+      <div class="check-detail" id="det-login-url"></div>
+      <div class="fix" id="fix-login-url">
+        <strong>❌ /api/login/ returned 404 — the URL is not registered</strong><br/>
+        Check your <strong>root urls.py</strong> (the one inside your project folder, e.g. core/urls.py or studentpal/urls.py):
+        <code>from django.urls import path, include
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/", include("accounts.urls")),  # ← must be here
+]</code>
+        Then check <strong>accounts/urls.py</strong>:
+        <code>urlpatterns = [
+    path("login/",    LoginAPIView.as_view(),    name="login"),
+    path("register/", RegisterAPIView.as_view(), name="register"),
+    ...
+]</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="check">
+    <span class="dot dot--wait" id="dot-register-url"></span>
+    <div>
+      <div class="check-label" id="lbl-register-url">Checking /api/register/ exists…</div>
+      <div class="check-detail" id="det-register-url"></div>
+      <div class="fix" id="fix-register-url">
+        <strong>❌ /api/register/ returned 404</strong><br/>
+        Same fix as above — make sure accounts/urls.py has the register path.
+      </div>
+    </div>
+  </div>
+
+  <div class="check">
+    <span class="dot dot--wait" id="dot-login-api"></span>
+    <div>
+      <div class="check-label" id="lbl-login-api">Testing login API with dummy credentials…</div>
+      <div class="check-detail" id="det-login-api"></div>
+      <div class="fix" id="fix-login-api">
+        <strong>❌ Login API returned a non-JSON response (HTML)</strong><br/>
+        This usually means a Python error in views.py or serializers.py.<br/>
+        Check your Django terminal for a traceback (red text).
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Summary</h2>
+  <div id="summary" style="font-size:.9rem;color:#94a3b8;line-height:1.8">
+    Click Run Checks to see results.
+  </div>
+</div>
+
+<button class="btn" id="runBtn" onclick="runAll()">▶ Run Checks</button>
+
+<script>
+  const API = "http://127.0.0.1:8000";
+
+  function setCheck(id, status, label, detail, showFix) {
+    // status: 'ok' | 'fail' | 'warn'
+    document.getElementById("dot-"  + id).className = "dot dot--" + status;
+    document.getElementById("lbl-"  + id).textContent = label;
+    document.getElementById("det-"  + id).textContent = detail || "";
+    var fix = document.getElementById("fix-" + id);
+    if (fix) fix.className = "fix" + (showFix ? " visible" : "");
+  }
+
+  async function runAll() {
+    var btn = document.getElementById("runBtn");
+    btn.disabled = true;
+    btn.textContent = "Running…";
+    document.getElementById("summary").textContent = "Running checks…";
+
+    var results = [];
+
+    // ── CHECK 1: Protocol ──────────────────────────────────────
+    var proto = window.location.protocol;
+    var isFile = proto === "file:";
+    if (isFile) {
+      setCheck("protocol", "fail",
+        "❌ Page opened as file:// — fetch() will be blocked",
+        "Current URL: " + window.location.href,
+        true);
+      results.push("FAIL: file:// protocol");
+    } else {
+      setCheck("protocol", "ok",
+        "✅ Page served over " + proto + " — fetch() is allowed",
+        "Current URL: " + window.location.href,
+        false);
+      results.push("OK: protocol " + proto);
+    }
+
+    // ── CHECK 2: Django reachable ──────────────────────────────
+    try {
+      var r = await fetch(API + "/api/login/", {
+        method: "OPTIONS",
+        signal: AbortSignal.timeout(4000),
+      });
+      setCheck("django", "ok",
+        "✅ Django is running and reachable on port 8000",
+        "Status: " + r.status, false);
+      results.push("OK: Django reachable");
+    } catch (e) {
+      setCheck("django", "fail",
+        "❌ Cannot reach Django on http://127.0.0.1:8000",
+        "Error: " + e.message, true);
+      results.push("FAIL: Django not reachable — " + e.message);
+
+      // No point running more checks
+      finish(btn, results);
+      return;
+    }
+
+    // ── CHECK 3: CORS headers ──────────────────────────────────
+    try {
+      var rc = await fetch(API + "/api/login/", {
+        method: "OPTIONS",
+        headers: { "Origin": window.location.origin },
+        signal: AbortSignal.timeout(4000),
+      });
+      var acao = rc.headers.get("Access-Control-Allow-Origin");
+      if (acao) {
+        setCheck("cors", "ok",
+          "✅ CORS headers present — browser will allow fetch()",
+          "Access-Control-Allow-Origin: " + acao, false);
+        results.push("OK: CORS configured");
+      } else {
+        setCheck("cors", "warn",
+          "⚠️ No CORS header in response — may be blocked",
+          "Access-Control-Allow-Origin header missing", true);
+        results.push("WARN: CORS header missing");
+      }
+    } catch (e) {
+      setCheck("cors", "fail",
+        "❌ CORS check failed",
+        e.message, true);
+      results.push("FAIL: CORS — " + e.message);
+    }
+
+    // ── CHECK 4: /api/login/ URL ───────────────────────────────
+    try {
+      var rl = await fetch(API + "/api/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "_test_@test.com", password: "wrongpassword123" }),
+        signal: AbortSignal.timeout(6000),
+      });
+      var txt = await rl.text();
+      var parsed = null;
+      try { parsed = JSON.parse(txt); } catch(_) {}
+
+      if (rl.status === 404) {
+        setCheck("login-url", "fail",
+          "❌ /api/login/ not found (404) — URL not registered",
+          "Check root urls.py — path('api/', include('accounts.urls')) missing", true);
+        results.push("FAIL: /api/login/ 404");
+      } else {
+        setCheck("login-url", "ok",
+          "✅ /api/login/ exists (status " + rl.status + ")",
+          "", false);
+        results.push("OK: /api/login/ exists");
+      }
+
+      // ── CHECK 5: API returns JSON ────────────────────────────
+      if (parsed !== null) {
+        if (rl.status === 401 || rl.status === 400) {
+          setCheck("login-api", "ok",
+            "✅ API is working correctly — returned proper JSON error for wrong credentials",
+            "Response: " + JSON.stringify(parsed).slice(0, 120), false);
+          results.push("OK: Login API returns JSON");
+        } else {
+          setCheck("login-api", "warn",
+            "⚠️ Unexpected status " + rl.status + " but JSON is valid",
+            JSON.stringify(parsed).slice(0, 120), false);
+          results.push("WARN: status " + rl.status);
+        }
+      } else {
+        setCheck("login-api", "fail",
+          "❌ API returned HTML instead of JSON (status " + rl.status + ")",
+          "First 150 chars: " + txt.slice(0, 150), true);
+        results.push("FAIL: API returned HTML — check Django terminal for Python error");
+      }
+
+    } catch (e) {
+      setCheck("login-url", "fail", "❌ Could not reach /api/login/", e.message, true);
+      setCheck("login-api", "warn", "Skipped (login URL failed)", "", false);
+      results.push("FAIL: /api/login/ — " + e.message);
+    }
+
+    // ── CHECK: /api/register/ ──────────────────────────────────
+    try {
+      var rr = await fetch(API + "/api/register/", {
+        method: "OPTIONS",
+        signal: AbortSignal.timeout(4000),
+      });
+      if (rr.status === 404) {
+        setCheck("register-url", "fail",
+          "❌ /api/register/ not found (404)",
+          "Check accounts/urls.py has register path", true);
+        results.push("FAIL: /api/register/ 404");
+      } else {
+        setCheck("register-url", "ok",
+          "✅ /api/register/ exists (status " + rr.status + ")",
+          "", false);
+        results.push("OK: /api/register/ exists");
+      }
+    } catch(e) {
+      setCheck("register-url", "fail", "❌ Could not reach /api/register/", e.message, true);
+      results.push("FAIL: /api/register/ — " + e.message);
+    }
+
+    finish(btn, results);
+  }
+
+  function finish(btn, results) {
+    btn.disabled = false;
+    btn.textContent = "▶ Run Checks Again";
+    var fails = results.filter(r => r.startsWith("FAIL")).length;
+    var warns = results.filter(r => r.startsWith("WARN")).length;
+
+    var summary = document.getElementById("summary");
+    if (fails === 0 && warns === 0) {
+      summary.innerHTML = "<span style='color:#4ade80;font-weight:700'>✅ All checks passed!</span> Your backend is correctly configured. Try logging in again.";
+    } else if (fails === 0) {
+      summary.innerHTML = "<span style='color:#fbbf24;font-weight:700'>⚠️ " + warns + " warning(s).</span> See yellow items above.";
+    } else {
+      summary.innerHTML = "<span style='color:#f87171;font-weight:700'>❌ " + fails + " issue(s) found.</span> Fix the red items above in order — each one may be caused by the one before it.";
+    }
+  }
+</script>
+</body>
+</html>
