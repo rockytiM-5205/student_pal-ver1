@@ -225,7 +225,7 @@ Open the application in your browser.
 ![landing page](screenshots/landing.png)
 
 ### signup page
-![signup page](screenshots/signup.png)
+![signup page](screenshots/signin.png)
 
 
 ### dashboard page
