@@ -153,7 +153,7 @@ Authentication
 
 Database
 
-- SQLite (Development)
+- Postgresql (Development)
 
 Version Control
 
@@ -199,7 +199,7 @@ cd student_pal-ver1
 
 Backend Setup
 
-python -m venv venv
+python -m venv student
 
 Activate the virtual environment.
 
