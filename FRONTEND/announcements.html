@@ -73,7 +73,7 @@
       </div>
 
       <div class="toolbar" style="margin-bottom:var(--s6)">
-        <select class="filter-select" aria-label="Filter by category" onchange="this.closest('main').querySelectorAll('.announce-card').forEach(function(c){c.style.display=(!this.value||c.getAttribute('data-cat')===this.value)?'':'none'}.bind(this))">
+        <select class="filter-select" id="announceCategoryFilter" aria-label="Filter by category">
           <option value="">All Categories</option>
           <option value="general">General</option>
           <option value="faculty">Faculty</option>
@@ -82,7 +82,7 @@
         </select>
       </div>
 
-      <div class="announce-list">
+      <div class="announce-list" id="announceList">
 
         <article class="announce-card announce-card--urgent" data-cat="urgent">
           <div class="announce-card__icon" style="background:var(--color-danger-soft);color:var(--color-danger)"><i data-lucide="alert-triangle" class="icon-md"></i></div>
@@ -155,6 +155,9 @@
   </div>
 </div>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/api.js"></script>
 <script src="js/main.js"></script>
+<script src="js/student-content.js"></script>
 </body>
 </html>

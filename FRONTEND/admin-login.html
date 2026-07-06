@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Sign In — StudentPal</title>
+  <meta name="description" content="StudentPal admin portal — authorized personnel only." />
+
+  <!-- Blocking theme script — sets data-theme before CSS loads (no flash) -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('studentpal-theme');
+        var theme  = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23334155'/%3E%3Cstop offset='1' stop-color='%2306B6D4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='12' fill='url(%23g)'/%3E%3Cpath d='M24 12l11 5.2v9.6c0 6.6-4.6 10.8-11 13.2-6.4-2.4-11-6.6-11-13.2v-9.6L24 12z' fill='white' fill-opacity='0.92'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles/auth.css" />
+
+  <style>
+    /* Admin-specific overrides — slate/graphite instead of the student blue,
+       so this page reads visibly as a different, restricted-access portal. */
+    .admin-login-body .brand-panel {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+    }
+    .admin-login-body .brand-panel .blob--a { background: rgba(6, 182, 212, 0.12); }
+    .admin-login-body .brand-panel .blob--b { background: rgba(51, 65, 85, 0.35); }
+    .admin-login-body .brand__mark {
+      background: linear-gradient(135deg, #334155, #06b6d4);
+    }
+    .admin-login-body .btn--primary {
+      background: #1e293b;
+    }
+    .admin-login-body .btn--primary:hover {
+      background: #0f172a;
+    }
+    .admin-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(217, 119, 6, 0.08);
+      border: 1px solid rgba(217, 119, 6, 0.25);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #b45309;
+    }
+    [data-theme="dark"] .admin-notice {
+      color: #fbbf24;
+    }
+    .admin-notice svg { flex-shrink: 0; margin-top: 2px; }
+  </style>
+</head>
+
+<body class="auth-body admin-login-body page-enter">
+
+  <button class="theme-toggle theme-toggle--floating" id="themeToggle"
+          aria-label="Switch to dark theme" aria-pressed="false">
+    <i data-lucide="sun"  class="theme-toggle__icon theme-toggle__icon--sun"></i>
+    <i data-lucide="moon" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+  </button>
+
+  <div class="auth-shell">
+
+    <!-- ── BRAND PANEL ── -->
+    <aside class="brand-panel">
+      <div class="brand-panel__decor" aria-hidden="true">
+        <span class="blob blob--a"></span>
+        <span class="blob blob--b"></span>
+      </div>
+
+      <a href="index.html" class="brand brand--light">
+        <span class="brand__mark"><i data-lucide="shield-check"></i></span>
+        <span class="brand__name">StudentPal Admin</span>
+      </a>
+
+      <div class="brand-panel__copy">
+        <p class="eyebrow eyebrow--light">
+          <i data-lucide="lock" class="icon-xs"></i>Restricted Access
+        </p>
+        <h1>Admin Portal</h1>
+        <p>Sign in with your administrator credentials to manage resources, announcements, and student accounts.</p>
+      </div>
+
+      <div class="preview-card" aria-hidden="true">
+        <div class="preview-card__head">
+          <span class="preview-card__avatar">SA</span>
+          <div>
+            <p class="preview-card__name">Super Admin</p>
+            <p class="preview-card__meta">Full system access</p>
+          </div>
+        </div>
+        <div class="preview-card__stats">
+          <div><span>1,480</span>Resources</div>
+          <div><span>124</span>Announcements</div>
+        </div>
+        <div class="preview-card__list">
+          <p><i data-lucide="users" class="icon-xs"></i>5,200 students managed</p>
+          <p><i data-lucide="activity" class="icon-xs"></i>Full audit trail enabled</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── AUTH PANEL ── -->
+    <main class="auth-panel">
+      <div class="auth-card glass">
+
+        <a href="index.html" class="brand brand--compact">
+          <span class="brand__mark"><i data-lucide="shield-check"></i></span>
+          <span class="brand__name">StudentPal Admin</span>
+        </a>
+
+        <div class="auth-card__head">
+          <h2>Admin Sign In</h2>
+          <p>Authorized personnel only.</p>
+        </div>
+
+        <div class="admin-notice">
+          <i data-lucide="alert-triangle" class="icon-xs"></i>
+          <span>This portal is restricted to StudentPal administrators. Student accounts cannot sign in here.</span>
+        </div>
+
+        <form id="adminLoginForm" novalidate>
+
+          <div class="field">
+            <label for="adminEmail">Admin Email Address</label>
+            <div class="field__control">
+              <i data-lucide="mail" class="field__icon icon-sm"></i>
+              <input
+                type="email" id="adminEmail" name="email"
+                placeholder="admin@studentpal.com"
+                autocomplete="email"
+                aria-describedby="adminEmailError"
+                required />
+            </div>
+            <p class="field__error" id="adminEmailError" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label for="adminPassword">Password</label>
+            <div class="field__control">
+              <i data-lucide="lock" class="field__icon icon-sm"></i>
+              <input
+                type="password" id="adminPassword" name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                aria-describedby="adminPasswordError"
+                required />
+              <button type="button" class="field__toggle"
+                      data-toggle-for="adminPassword"
+                      aria-label="Show password">
+                <i data-lucide="eye" class="icon-sm"></i>
+              </button>
+            </div>
+            <p class="field__error" id="adminPasswordError" role="alert"></p>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block btn--lg" id="adminLoginSubmit">
+            <span class="btn__label">Sign In to Admin Portal</span>
+            <span class="btn__spinner" aria-hidden="true"></span>
+          </button>
+
+        </form>
+
+        <p class="auth-card__footer">
+          Not an admin? <a href="login.html">Go to student sign in</a>
+        </p>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/admin-login.js"></script>
+
+</body>
+</html>

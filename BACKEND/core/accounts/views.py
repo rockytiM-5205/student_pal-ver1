@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
-from .models import User
+from .models import User 
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 

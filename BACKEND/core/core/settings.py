@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "accounts",
-    "chat",
-    "notes",
+    "announcements",
+    "resources",
 ]
 
 # ── MIDDLEWARE ─────────────────────────────────────────────────────────────────

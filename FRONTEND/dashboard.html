@@ -53,19 +53,19 @@
         <a href="announcements.html" class="nav-item">
           <i data-lucide="megaphone"></i><span>Announcements</span>
         </a>
-        <a href="opportunities.html" class="nav-item">
+        <a href="#" class="nav-item">
           <i data-lucide="briefcase"></i><span>Opportunities</span>
         </a>
-        <a href="community.html" class="nav-item">
+        <a href="#" class="nav-item">
           <i data-lucide="users"></i><span>Community</span>
         </a>
-        <a href="assignments.html" class="nav-item">
+        <a href="#" class="nav-item">
           <i data-lucide="clipboard-list"></i><span>Assignments</span>
         </a>
-        <a href="calendar.html" class="nav-item">
+        <a href="#" class="nav-item">
           <i data-lucide="calendar-days"></i><span>Academic Calendar</span>
         </a>
-        <a href="settings.html" class="nav-item">
+        <a href="#" class="nav-item">
           <i data-lucide="settings"></i><span>Settings</span>
         </a>
       </nav>
@@ -143,8 +143,8 @@
                 </div>
               </div>
               <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="user" class="icon-xs"></i>View Profile</a>
-              <a href="settings.html" class="dropdown__item" role="menuitem"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
-              <a href="#" class="dropdown__item dropdown__item--danger" role="menuitem" data-logout aria-label="Log out of StudentPal"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
+              <a href="#" class="dropdown__item" role="menuitem"><i data-lucide="settings" class="icon-xs"></i>Settings</a>
+              <a href="#" class="dropdown__item dropdown__item--danger" role="menuitem"><i data-lucide="log-out" class="icon-xs"></i>Log Out</a>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@
                 <a href="resources.html" class="btn btn--light">
                   Explore Resources <i data-lucide="arrow-right" class="icon-sm"></i>
                 </a>
-                <a href="opportunities.html" class="btn btn--ghost-light">
+                <a href="#opportunities" class="btn btn--ghost-light">
                   <i data-lucide="briefcase" class="icon-sm"></i> Find Opportunities
                 </a>
               </div>
@@ -217,10 +217,10 @@
                 <span class="quick-card__icon"><i data-lucide="users"></i></span>
                 <span>Join Community</span>
               </a>
-              <!-- <a href="#" class="quick-card">
+              <a href="#" class="quick-card">
                 <span class="quick-card__icon"><i data-lucide="upload"></i></span>
                 <span>Upload Notes</span>
-              </a> -->
+              </a>
               <a href="calendar.html" class="quick-card">
                 <span class="quick-card__icon"><i data-lucide="calendar-days"></i></span>
                 <span>View Calendar</span>
@@ -234,7 +234,7 @@
               <h2>Latest Announcements</h2>
               <a href="#" class="panel__link">View all <i data-lucide="arrow-right" class="icon-xs"></i></a>
             </div>
-            <div class="announce-grid">
+            <div class="announce-grid" id="dashboardAnnounceGrid">
               <article class="announce-card">
                 <span class="badge badge--primary">School News</span>
                 <h3>AAUA Wins National Robotics Challenge</h3>
@@ -314,7 +314,7 @@
               <h2>Resource Hub</h2>
               <a href="#" class="panel__link">View all <i data-lucide="arrow-right" class="icon-xs"></i></a>
             </div>
-            <div class="resource-grid">
+            <div class="resource-grid" id="resourceGrid">
               <article class="resource-card">
                 <span class="resource-card__icon"><i data-lucide="file-text"></i></span>
                 <div class="resource-card__body">
@@ -536,7 +536,9 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <script src="js/dashboard.js"></script>
   <script src="js/auth-guard.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/student-content.js"></script>
 </body>
 </html>
