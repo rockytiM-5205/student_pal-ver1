@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "accounts",
     "announcements",
     "resources",
+    "opportunities"
 ]
 
 # ── MIDDLEWARE ─────────────────────────────────────────────────────────────────
