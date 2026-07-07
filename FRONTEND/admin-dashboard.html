@@ -662,7 +662,47 @@
 
 <!-- Create Opportunity -->
 <div class="modal-overlay" id="createOppModal">
-  <div class="modal"><div class="modal-head"><h3>Create Opportunity</h3><button class="modal-close" onclick="closeModal('createOppModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-field"><label>Title</label><input type="text" placeholder="Opportunity name…" /></div><div class="modal-grid"><div class="modal-field"><label>Type</label><select><option>Scholarship</option><option>Internship</option><option>Competition</option><option>Ambassador</option></select></div><div class="modal-field"><label>Closing Date</label><input type="date" /></div></div><div class="modal-field"><label>Description</label><textarea placeholder="Describe the opportunity…"></textarea></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('createOppModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('createOppModal');showToast('Opportunity published successfully.','success')"><i data-lucide="briefcase" class="icon-xs"></i>Publish</button></div></div>
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Create Opportunity</h3>
+      <button class="modal-close" onclick="closeModal('createOppModal')"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label for="newOppTitle">Title</label>
+        <input type="text" id="newOppTitle" placeholder="Opportunity name…" required />
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field">
+          <label for="newOppType">Type</label>
+          <select id="newOppType" required>
+            <option value="scholarship">Scholarship</option>
+            <option value="internship">Internship</option>
+            <option value="competition">Competition</option>
+            <option value="ambassador">Ambassador Program</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="newOppDeadline">Closing Date</label>
+          <input type="date" id="newOppDeadline" required />
+        </div>
+      </div>
+      <div class="modal-field">
+        <label for="newOppOrg">Organization</label>
+        <input type="text" id="newOppOrg" placeholder="e.g. MTN Foundation, Andela…" />
+      </div>
+      <div class="modal-field">
+        <label for="newOppDesc">Description</label>
+        <textarea id="newOppDesc" placeholder="Describe the opportunity…" required></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn--outline" onclick="closeModal('createOppModal')">Cancel</button>
+      <button class="btn btn--primary" id="createOppBtn" onclick="adminCreateOpportunity()">
+        <i data-lucide="briefcase" class="icon-xs"></i>Publish
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Add Student -->
@@ -687,7 +727,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/api.js"></script>
+<script src="js/api-opportunities.js"></script>
 <script src="js/admin.js"></script>
 <script src="js/admin-resources.js"></script>
+<script src="js/admin-opportunities.js"></script>
 </body>
 </html>

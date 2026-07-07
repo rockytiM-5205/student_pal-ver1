@@ -23,8 +23,7 @@ urlpatterns = [
     # ── Announcements: list/create/publish/delete ────────────────
     path("api/announcements/", include("announcements.urls")),
 
-    # ── Add future apps the same way ──────────────────────────────
-    # path("api/opportunities/", include("opportunities.urls")),
+    path("api/opportunities/", include("opportunities.urls")),
     # path("api/community/",     include("community.urls")),
     # path("api/assignments/",   include("assignments.urls")),
     # path("api/calendar/",      include("calendar_app.urls")),
