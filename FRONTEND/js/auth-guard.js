@@ -276,12 +276,22 @@
 
       function doFetch(token) {
         var fullUrl = url.startsWith("http") ? url : API_BASE + url;
-        return fetch(fullUrl, Object.assign({}, options, {
-          headers: Object.assign({}, options.headers || {}, {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token,
-          }),
-        }));
+
+        // FIX: FormData uploads (file uploads) must NOT have Content-Type
+        // set manually — the browser needs to generate its own
+        // "multipart/form-data; boundary=..." header. Forcing
+        // "application/json" here was breaking every file upload with
+        // a 415 Unsupported Media Type error.
+        var isFormData = options.body instanceof FormData;
+
+        var headers = Object.assign({}, options.headers || {}, {
+          "Authorization": "Bearer " + token,
+        });
+        if (!isFormData) {
+          headers["Content-Type"] = "application/json";
+        }
+
+        return fetch(fullUrl, Object.assign({}, options, { headers: headers }));
       }
 
       var res = await doFetch(access);

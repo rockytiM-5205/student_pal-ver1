@@ -105,7 +105,17 @@
       return;
     }
 
-    oppState.all = (res.data.opportunities || []).slice(0, 4); // dashboard preview: top 4
+    // FIX: the backend orders by soonest deadline, which meant a newly
+    // created opportunity with a later deadline than 4 existing ones
+    // never appeared on the dashboard preview. Sort by newest-created
+    // first for this preview specifically, so new opportunities always
+    // show up here immediately after an admin publishes them.
+    var opportunities = res.data.opportunities || [];
+    var sortedByNewest = opportunities.slice().sort(function (a, b) {
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
+    oppState.all = sortedByNewest.slice(0, 4);
     renderOpportunities(oppState.all);
   }
 
