@@ -99,7 +99,7 @@
           <option value="competition">Competitions</option>
           <option value="ambassador">Ambassador Programs</option>
         </select>
-        <select class="filter-select" aria-label="Filter by status" onchange="var v=this.value;document.querySelectorAll('.opp-card').forEach(function(c){c.style.display=(!v||c.getAttribute('data-status')===v)?'':'none'})">
+        <select class="filter-select" id="oppStatusFilter" aria-label="Filter by status">
           <option value="">All Status</option>
           <option value="open">Open</option>
           <option value="closing-soon">Closing Soon</option>
@@ -107,7 +107,7 @@
         </select>
       </div>
 
-      <div class="opp-grid">
+      <div class="opp-grid" id="oppGridFull">
 
         <article class="opp-card" data-type="scholarship" data-status="closing-soon">
           <div class="opp-card__top">
@@ -226,6 +226,10 @@
   </div>
 </div>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/api.js"></script>
+<script src="js/api-opportunities.js"></script>
 <script src="js/main.js"></script>
+<script src="js/student-opportunities.js"></script>
 </body>
 </html>
