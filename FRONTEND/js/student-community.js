@@ -1,0 +1,357 @@
+/**
+ * student-community.js
+ * Replaces the local-only mock compose/like logic in main.js with
+ * real backend connections: posts, likes, comments, and reporting.
+ *
+ * Load order (bottom of <body>, after auth-guard.js, api.js, main.js):
+ *   <script src="js/auth-guard.js"></script>
+ *   <script src="js/api.js"></script>
+ *   <script src="main.js"></script>
+ *   <script src="js/student-community.js"></script>   ← this file (load LAST)
+ */
+
+(function () {
+  "use strict";
+
+  var feed = document.getElementById("postFeed");
+  if (!feed) return; // not on this page
+
+  var BASE = "http://127.0.0.1:8000/api/community";
+
+  /* ── LOW-LEVEL REQUEST (same pattern as api-opportunities.js) ─────────────── */
+
+  async function request(method, path, body) {
+    var url = BASE + path;
+    var opts = { method: method };
+    if (body) {
+      opts.headers = { "Content-Type": "application/json" };
+      opts.body    = JSON.stringify(body);
+    }
+
+    var authFetch = window.StudentPal && window.StudentPal.authFetch
+      ? window.StudentPal.authFetch.bind(window.StudentPal)
+      : function (u, o) { return fetch(u, o); };
+
+    var res;
+    try {
+      res = await authFetch(url, opts);
+    } catch (networkErr) {
+      console.error("[community] Network error:", networkErr);
+      return { ok: false, status: 0, data: null,
+               error: "Cannot connect to the server. Is Django running?" };
+    }
+
+    var text = await res.text();
+    var data = null;
+    try { data = JSON.parse(text); }
+    catch (_) {
+      console.error("[community] Non-JSON response (" + res.status + "):", text.slice(0, 300));
+      return { ok: false, status: res.status, data: null,
+               error: "Server returned an unexpected response (status " + res.status + ")." };
+    }
+
+    return {
+      ok: res.ok, status: res.status, data: data,
+      error: res.ok ? null : (data.message || data.detail ||
+        ("Request failed (status " + res.status + ")")),
+    };
+  }
+
+  var API = {
+    listPosts:    function ()        { return request("GET",  "/posts/"); },
+    createPost:   function (content) { return request("POST", "/posts/", { content: content }); },
+    deletePost:   function (id)      { return request("DELETE", "/posts/" + id + "/"); },
+    toggleLike:   function (id)      { return request("POST", "/posts/" + id + "/like/"); },
+    listComments: function (id)      { return request("GET",  "/posts/" + id + "/comments/"); },
+    addComment:   function (id, c)   { return request("POST", "/posts/" + id + "/comments/", { content: c }); },
+    reportPost:   function (id, r)   { return request("POST", "/posts/" + id + "/report/", { reason: r }); },
+  };
+
+  /* ── HELPERS ──────────────────────────────────────────────────────────────── */
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function timeAgo(iso) {
+    var seconds = Math.floor((Date.now() - new Date(iso)) / 1000);
+    if (seconds < 60)   return "Just now";
+    var minutes = Math.floor(seconds / 60);
+    if (minutes < 60)   return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
+    var hours = Math.floor(minutes / 60);
+    if (hours < 24)     return hours + " hour" + (hours === 1 ? "" : "s") + " ago";
+    var days = Math.floor(hours / 24);
+    if (days < 7)       return days + " day" + (days === 1 ? "" : "s") + " ago";
+    return new Date(iso).toLocaleDateString();
+  }
+
+  function toast(message, type) {
+    if (typeof window.showToast === "function") window.showToast(message, type);
+    else console.log("[toast:" + (type || "info") + "]", message);
+  }
+
+  function avatarGradient(seed) {
+    var gradients = [
+      "linear-gradient(135deg,#06b6d4,#2563eb)",
+      "linear-gradient(135deg,#7c3aed,#06b6d4)",
+      "linear-gradient(135deg,#d97706,#dc2626)",
+      "linear-gradient(135deg,#16a34a,#06b6d4)",
+      "linear-gradient(135deg,#2563eb,#7c3aed)",
+    ];
+    var idx = 0;
+    for (var i = 0; i < seed.length; i++) idx += seed.charCodeAt(i);
+    return gradients[idx % gradients.length];
+  }
+
+  var state = { posts: [] };
+
+  /* ── RENDER ───────────────────────────────────────────────────────────────── */
+
+  function postCardHtml(p) {
+    var likeClass = p.has_liked ? "post-action is-liked" : "post-action";
+    var likeIcon  = p.has_liked ? "heart" : "heart";
+    var gradient  = avatarGradient(p.author_name);
+    var deptLine  = p.author_department + (p.author_level ? " · " + p.author_level + "L" : "");
+    var deleteBtn = p.is_own_post
+      ? '<button class="post-action" onclick="StudentCommunity.deletePost(' + p.id + ')" title="Delete your post"><i data-lucide="trash-2" class="icon-xs"></i></button>'
+      : '<button class="post-action" onclick="StudentCommunity.reportPost(' + p.id + ')" title="Report this post"><i data-lucide="flag" class="icon-xs"></i></button>';
+
+    return [
+      '<article class="post-card" data-post-id="' + p.id + '">',
+      '  <div class="post-card__head">',
+      '    <span class="post-card__avatar" style="background:' + gradient + '">' + escapeHtml(p.author_initials) + '</span>',
+      '    <div>',
+      '      <p><strong>' + escapeHtml(p.author_name) + '</strong></p>',
+      '      <p class="post-card__dept">' + escapeHtml(deptLine) + '</p>',
+      '    </div>',
+      '    <span class="post-card__time">' + timeAgo(p.created_at) + '</span>',
+      '  </div>',
+      '  <p class="post-card__body">' + escapeHtml(p.content) + '</p>',
+      '  <div class="post-card__foot">',
+      '    <button class="' + likeClass + '" onclick="StudentCommunity.toggleLike(' + p.id + ')">',
+      '      <i data-lucide="' + likeIcon + '" class="icon-xs"></i>',
+      '      <span class="like-count">' + p.likes_count + '</span> Likes',
+      '    </button>',
+      '    <button class="post-action" onclick="StudentCommunity.toggleComments(' + p.id + ')">',
+      '      <i data-lucide="message-circle" class="icon-xs"></i>',
+      '      <span class="comment-count">' + p.comments_count + '</span> Comments',
+      '    </button>',
+      '    ' + deleteBtn,
+      '  </div>',
+      '  <div class="post-comments" id="comments-' + p.id + '" style="display:none;margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--color-border)"></div>',
+      '</article>',
+    ].join("\n");
+  }
+
+  function render(posts) {
+    if (!posts || posts.length === 0) {
+      feed.innerHTML =
+        '<p style="text-align:center;padding:2rem;color:var(--color-text-faint)">No posts yet. Be the first to share something!</p>';
+      return;
+    }
+    feed.innerHTML = posts.map(postCardHtml).join("\n");
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  /* ── LOAD ─────────────────────────────────────────────────────────────────── */
+
+  async function loadPosts() {
+    feed.innerHTML =
+      '<p style="text-align:center;padding:2rem;color:var(--color-text-faint)">Loading posts…</p>';
+
+    var res = await API.listPosts();
+
+    if (!res.ok) {
+      feed.innerHTML =
+        '<p style="text-align:center;padding:2rem;color:var(--color-danger)">' + escapeHtml(res.error) + '</p>';
+      toast(res.error, "error");
+      return;
+    }
+
+    state.posts = res.data.posts || [];
+    render(state.posts);
+  }
+
+  /* ── COMPOSE (replaces main.js's local-only version) ─────────────────────── */
+
+  function wireCompose() {
+    var composeArea = document.getElementById("composeArea");
+    var composeBtn  = document.getElementById("composeBtn");
+    if (!composeArea || !composeBtn) return;
+
+    // Clone-and-replace to strip out main.js's existing local-only click handler
+    var freshBtn = composeBtn.cloneNode(true);
+    composeBtn.parentNode.replaceChild(freshBtn, composeBtn);
+
+    freshBtn.addEventListener("click", async function () {
+      var content = composeArea.value.trim();
+      if (!content) { toast("Write something before posting.", "error"); return; }
+
+      freshBtn.disabled = true;
+      var originalText = freshBtn.textContent;
+      freshBtn.textContent = "Posting…";
+
+      var res = await API.createPost(content);
+
+      freshBtn.disabled = false;
+      freshBtn.innerHTML = '<i data-lucide="send" class="icon-xs"></i> Post';
+      if (window.lucide) window.lucide.createIcons();
+
+      if (!res.ok) { toast(res.error, "error"); return; }
+
+      composeArea.value = "";
+      state.posts.unshift(res.data.post);
+      render(state.posts);
+      toast("Posted!", "success");
+    });
+  }
+
+  /* ── LIKE ─────────────────────────────────────────────────────────────────── */
+
+  async function toggleLike(id) {
+    var res = await API.toggleLike(id);
+    if (!res.ok) { toast(res.error, "error"); return; }
+
+    var item = state.posts.find(function (p) { return p.id === id; });
+    if (item) {
+      item.has_liked = res.data.liked;
+      item.likes_count = res.data.likes_count;
+    }
+
+    var card = document.querySelector('[data-post-id="' + id + '"]');
+    if (card) {
+      var btn = card.querySelector(".post-action");
+      btn.classList.toggle("is-liked", res.data.liked);
+      var countEl = btn.querySelector(".like-count");
+      if (countEl) countEl.textContent = res.data.likes_count;
+    }
+  }
+
+  /* ── COMMENTS (inline expand/collapse thread) ────────────────────────────── */
+
+  async function toggleComments(id) {
+    var container = document.getElementById("comments-" + id);
+    if (!container) return;
+
+    var isOpen = container.style.display !== "none";
+    if (isOpen) {
+      container.style.display = "none";
+      return;
+    }
+
+    container.style.display = "block";
+    container.innerHTML = '<p style="font-size:.82rem;color:var(--color-text-faint)">Loading comments…</p>';
+
+    var res = await API.listComments(id);
+    if (!res.ok) {
+      container.innerHTML = '<p style="font-size:.82rem;color:var(--color-danger)">' + escapeHtml(res.error) + '</p>';
+      return;
+    }
+
+    var comments = res.data.comments || [];
+    var commentsHtml = comments.map(function (c) {
+      return [
+        '<div style="display:flex;gap:8px;margin-bottom:10px;font-size:.84rem">',
+        '  <span style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--gradient-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700">' + escapeHtml(c.author_initials) + '</span>',
+        '  <div><strong>' + escapeHtml(c.author_name) + '</strong> <span style="color:var(--color-text-faint);font-size:.72rem">· ' + timeAgo(c.created_at) + '</span>',
+        '  <p style="color:var(--color-text-muted)">' + escapeHtml(c.content) + '</p></div>',
+        '</div>',
+      ].join("");
+    }).join("");
+
+    var inputHtml = [
+      '<div style="display:flex;gap:8px;margin-top:8px">',
+      '  <input type="text" placeholder="Write a comment…" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface-2);font-size:.82rem" id="commentInput-' + id + '" />',
+      '  <button class="btn btn--primary btn--sm" onclick="StudentCommunity.submitComment(' + id + ')">Send</button>',
+      '</div>',
+    ].join("");
+
+    container.innerHTML = (commentsHtml || '<p style="font-size:.82rem;color:var(--color-text-faint)">No comments yet.</p>') + inputHtml;
+  }
+
+  async function submitComment(id) {
+    var input = document.getElementById("commentInput-" + id);
+    if (!input) return;
+    var content = input.value.trim();
+    if (!content) return;
+
+    var res = await API.addComment(id, content);
+    if (!res.ok) { toast(res.error, "error"); return; }
+
+    // Update the count on the post card
+    var item = state.posts.find(function (p) { return p.id === id; });
+    if (item) item.comments_count = res.data.comments_count;
+
+    var card = document.querySelector('[data-post-id="' + id + '"]');
+    if (card) {
+      var countEl = card.querySelector(".comment-count");
+      if (countEl) countEl.textContent = res.data.comments_count;
+    }
+
+    input.value = "";
+    // Re-open the thread to show the new comment
+    var container = document.getElementById("comments-" + id);
+    container.style.display = "none";
+    toggleComments(id);
+  }
+
+  /* ── DELETE (own post) ────────────────────────────────────────────────────── */
+
+  async function deletePost(id) {
+    if (!confirm("Delete this post?")) return;
+
+    var res = await API.deletePost(id);
+    if (!res.ok) { toast(res.error, "error"); return; }
+
+    state.posts = state.posts.filter(function (p) { return p.id !== id; });
+    render(state.posts);
+    toast("Post deleted.", "success");
+  }
+
+  /* ── REPORT (someone else's post) ────────────────────────────────────────── */
+
+  async function reportPost(id) {
+    var reason = prompt("Why are you reporting this post?\n\nType: spam, abuse, or inappropriate");
+    if (!reason) return;
+
+    reason = reason.trim().toLowerCase();
+    if (!["spam", "abuse", "inappropriate"].includes(reason)) {
+      toast("Please type exactly: spam, abuse, or inappropriate.", "error");
+      return;
+    }
+
+    var res = await API.reportPost(id, reason);
+    if (!res.ok) { toast(res.error, "error"); return; }
+
+    toast(res.data.message || "Post reported.", "success");
+  }
+
+  /* ── PUBLIC API for inline onclick ───────────────────────────────────────── */
+  window.StudentCommunity = {
+    toggleLike:     toggleLike,
+    toggleComments: toggleComments,
+    submitComment:  submitComment,
+    deletePost:     deletePost,
+    reportPost:     reportPost,
+  };
+
+  /* ── INIT ─────────────────────────────────────────────────────────────────── */
+
+  function init() {
+    if (!window.StudentPal) {
+      console.error("[student-community] StudentPal (auth-guard.js) not found.");
+      return;
+    }
+    wireCompose();
+    loadPosts();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+})();
