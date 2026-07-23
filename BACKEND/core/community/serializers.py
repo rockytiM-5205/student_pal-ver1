@@ -57,6 +57,7 @@ class PostSerializer(serializers.ModelSerializer):
     comment_count = serializers.IntegerField(read_only=True)
     has_liked     = serializers.SerializerMethodField()
     is_owner      = serializers.SerializerMethodField()
+    liked_by_preview = serializers.SerializerMethodField()
 
     class Meta:
         model  = Post
@@ -72,12 +73,13 @@ class PostSerializer(serializers.ModelSerializer):
             "has_liked",
             "is_owner",
             "is_hidden",
+            "liked_by_preview",
             "created_at",
         ]
         read_only_fields = [
             "id", "author_name", "author_initials", "author_department",
             "author_level", "like_count", "comment_count", "has_liked",
-            "is_owner", "created_at",
+            "is_owner", "liked_by_preview", "created_at",
         ]
 
     def get_author_name(self, obj):
@@ -100,6 +102,21 @@ class PostSerializer(serializers.ModelSerializer):
         if not request or not request.user.is_authenticated:
             return False
         return obj.author_id == request.user.id
+
+    def get_liked_by_preview(self, obj):
+        """
+        Returns up to 3 names of people who liked this post, plus the
+        remaining count — e.g. { "names": ["Tobi", "Faith"], "extra": 4 }
+        so the frontend can render "Liked by Tobi, Faith and 4 others."
+        """
+        likers = obj.likes.select_related("student").order_by("-created_at")[:3]
+        names = []
+        for like in likers:
+            u = like.student
+            names.append(u.get_full_name() or u.username)
+        total = obj.like_count
+        extra = max(0, total - len(names))
+        return {"names": names, "extra": extra}
 
 
 class PostCreateSerializer(serializers.ModelSerializer):

@@ -1,24 +1,3 @@
-"""
-community/views.py
-
-Endpoints
----------
-GET    /api/community/posts/                  List posts (feed)
-POST   /api/community/posts/                   Create a post
-GET    /api/community/posts/<id>/              Retrieve a single post
-DELETE /api/community/posts/<id>/              Delete a post (owner or admin)
-
-POST   /api/community/posts/<id>/like/         Toggle like on a post
-
-GET    /api/community/posts/<id>/comments/     List comments on a post
-POST   /api/community/posts/<id>/comments/     Add a comment to a post
-DELETE /api/community/comments/<id>/           Delete a comment (owner or admin)
-
-POST   /api/community/posts/<id>/report/       Report a post (student)
-
-GET    /api/community/reports/                 List reports (admin only)
-PATCH  /api/community/reports/<id>/            Resolve a report (admin only)
-"""
 
 from rest_framework import status
 from rest_framework.views import APIView

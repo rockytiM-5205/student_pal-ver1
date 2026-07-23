@@ -1,7 +1,8 @@
 /**
  * student-community.js
- * Replaces the local-only mock compose/like logic in main.js with
- * real backend connections: posts, likes, comments, and reporting.
+ * Connects community.html to the real backend: posts, likes (with
+ * visible "liked by" names), comments (with visible count), and
+ * reporting. Replaces main.js's local-only mock compose/like logic.
  *
  * Load order (bottom of <body>, after auth-guard.js, api.js, main.js):
  *   <script src="js/auth-guard.js"></script>
@@ -18,7 +19,7 @@
 
   var BASE = "http://127.0.0.1:8000/api/community";
 
-  /* ── LOW-LEVEL REQUEST (same pattern as api-opportunities.js) ─────────────── */
+  /* ── LOW-LEVEL REQUEST ────────────────────────────────────────────────────── */
 
   async function request(method, path, body) {
     var url = BASE + path;
@@ -64,7 +65,9 @@
     toggleLike:   function (id)      { return request("POST", "/posts/" + id + "/like/"); },
     listComments: function (id)      { return request("GET",  "/posts/" + id + "/comments/"); },
     addComment:   function (id, c)   { return request("POST", "/posts/" + id + "/comments/", { content: c }); },
-    reportPost:   function (id, r)   { return request("POST", "/posts/" + id + "/report/", { reason: r }); },
+    reportPost:   function (id, reason, note) {
+      return request("POST", "/posts/" + id + "/report/", { reason: reason, note: note || "" });
+    },
   };
 
   /* ── HELPERS ──────────────────────────────────────────────────────────────── */
@@ -77,13 +80,13 @@
 
   function timeAgo(iso) {
     var seconds = Math.floor((Date.now() - new Date(iso)) / 1000);
-    if (seconds < 60)   return "Just now";
+    if (seconds < 60) return "Just now";
     var minutes = Math.floor(seconds / 60);
-    if (minutes < 60)   return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
+    if (minutes < 60) return minutes + " minute" + (minutes === 1 ? "" : "s") + " ago";
     var hours = Math.floor(minutes / 60);
-    if (hours < 24)     return hours + " hour" + (hours === 1 ? "" : "s") + " ago";
+    if (hours < 24)   return hours + " hour" + (hours === 1 ? "" : "s") + " ago";
     var days = Math.floor(hours / 24);
-    if (days < 7)       return days + " day" + (days === 1 ? "" : "s") + " ago";
+    if (days < 7)     return days + " day" + (days === 1 ? "" : "s") + " ago";
     return new Date(iso).toLocaleDateString();
   }
 
@@ -105,18 +108,44 @@
     return gradients[idx % gradients.length];
   }
 
+  /**
+   * Builds the "Liked by X, Y and 4 others" line.
+   * Returns "" if nobody has liked the post yet.
+   */
+  function likedByLine(preview) {
+    if (!preview || !preview.names || preview.names.length === 0) return "";
+
+    var names = preview.names.map(escapeHtml);
+    var extra = preview.extra || 0;
+
+    var text;
+    if (names.length === 1 && extra === 0) {
+      text = "Liked by " + names[0];
+    } else if (names.length === 2 && extra === 0) {
+      text = "Liked by " + names[0] + " and " + names[1];
+    } else if (extra === 0) {
+      text = "Liked by " + names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
+    } else {
+      text = "Liked by " + names.join(", ") + " and " + extra + " other" + (extra === 1 ? "" : "s");
+    }
+
+    return '<p class="liked-by-line" style="font-size:.76rem;color:var(--color-text-faint);margin-top:4px">' +
+           '<i data-lucide="heart" class="icon-xs" style="color:var(--color-danger);vertical-align:-2px"></i> ' +
+           text + '</p>';
+  }
+
   var state = { posts: [] };
 
   /* ── RENDER ───────────────────────────────────────────────────────────────── */
 
   function postCardHtml(p) {
     var likeClass = p.has_liked ? "post-action is-liked" : "post-action";
-    var likeIcon  = p.has_liked ? "heart" : "heart";
     var gradient  = avatarGradient(p.author_name);
     var deptLine  = p.author_department + (p.author_level ? " · " + p.author_level + "L" : "");
-    var deleteBtn = p.is_own_post
+
+    var ownerBtn = p.is_owner
       ? '<button class="post-action" onclick="StudentCommunity.deletePost(' + p.id + ')" title="Delete your post"><i data-lucide="trash-2" class="icon-xs"></i></button>'
-      : '<button class="post-action" onclick="StudentCommunity.reportPost(' + p.id + ')" title="Report this post"><i data-lucide="flag" class="icon-xs"></i></button>';
+      : '<button class="post-action" onclick="StudentCommunity.openReportPrompt(' + p.id + ')" title="Report this post"><i data-lucide="flag" class="icon-xs"></i></button>';
 
     return [
       '<article class="post-card" data-post-id="' + p.id + '">',
@@ -129,16 +158,20 @@
       '    <span class="post-card__time">' + timeAgo(p.created_at) + '</span>',
       '  </div>',
       '  <p class="post-card__body">' + escapeHtml(p.content) + '</p>',
+      '  ' + likedByLine(p.liked_by_preview),
       '  <div class="post-card__foot">',
       '    <button class="' + likeClass + '" onclick="StudentCommunity.toggleLike(' + p.id + ')">',
-      '      <i data-lucide="' + likeIcon + '" class="icon-xs"></i>',
-      '      <span class="like-count">' + p.likes_count + '</span> Likes',
+      '      <i data-lucide="heart" class="icon-xs"></i>',
+      '      <span class="like-count">' + p.like_count + '</span> Likes',
       '    </button>',
       '    <button class="post-action" onclick="StudentCommunity.toggleComments(' + p.id + ')">',
       '      <i data-lucide="message-circle" class="icon-xs"></i>',
-      '      <span class="comment-count">' + p.comments_count + '</span> Comments',
+      '      <span class="comment-count">' + p.comment_count + '</span> Comments',
       '    </button>',
-      '    ' + deleteBtn,
+      '    <button class="post-action" onclick="StudentCommunity.toggleComments(' + p.id + ')">',
+      '      <i data-lucide="share-2" class="icon-xs"></i> Share',
+      '    </button>',
+      '    ' + ownerBtn,
       '  </div>',
       '  <div class="post-comments" id="comments-' + p.id + '" style="display:none;margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--color-border)"></div>',
       '</article>',
@@ -181,7 +214,7 @@
     var composeBtn  = document.getElementById("composeBtn");
     if (!composeArea || !composeBtn) return;
 
-    // Clone-and-replace to strip out main.js's existing local-only click handler
+    // Clone-and-replace to strip main.js's existing local-only click handler
     var freshBtn = composeBtn.cloneNode(true);
     composeBtn.parentNode.replaceChild(freshBtn, composeBtn);
 
@@ -190,7 +223,6 @@
       if (!content) { toast("Write something before posting.", "error"); return; }
 
       freshBtn.disabled = true;
-      var originalText = freshBtn.textContent;
       freshBtn.textContent = "Posting…";
 
       var res = await API.createPost(content);
@@ -214,19 +246,21 @@
     var res = await API.toggleLike(id);
     if (!res.ok) { toast(res.error, "error"); return; }
 
+    // Re-fetch just this post's data so liked_by_preview stays accurate
+    // (a lightweight full-list reload keeps everything in sync easily).
     var item = state.posts.find(function (p) { return p.id === id; });
     if (item) {
-      item.has_liked = res.data.liked;
-      item.likes_count = res.data.likes_count;
+      item.has_liked  = res.data.liked;
+      item.like_count = res.data.like_count;
     }
 
-    var card = document.querySelector('[data-post-id="' + id + '"]');
-    if (card) {
-      var btn = card.querySelector(".post-action");
-      btn.classList.toggle("is-liked", res.data.liked);
-      var countEl = btn.querySelector(".like-count");
-      if (countEl) countEl.textContent = res.data.likes_count;
+    // Refresh the whole feed to recompute the "Liked by ..." preview names —
+    // simplest way to keep that list correct without a second endpoint call.
+    var full = await API.listPosts();
+    if (full.ok) {
+      state.posts = full.data.posts || [];
     }
+    render(state.posts);
   }
 
   /* ── COMMENTS (inline expand/collapse thread) ────────────────────────────── */
@@ -261,6 +295,11 @@
       ].join("");
     }).join("");
 
+    var countLabel = comments.length === 0
+      ? '<p style="font-size:.82rem;color:var(--color-text-faint)">No comments yet — be the first to reply.</p>'
+      : '<p style="font-size:.72rem;color:var(--color-text-faint);margin-bottom:8px;font-weight:600">' +
+        comments.length + " comment" + (comments.length === 1 ? "" : "s") + '</p>';
+
     var inputHtml = [
       '<div style="display:flex;gap:8px;margin-top:8px">',
       '  <input type="text" placeholder="Write a comment…" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface-2);font-size:.82rem" id="commentInput-' + id + '" />',
@@ -268,7 +307,7 @@
       '</div>',
     ].join("");
 
-    container.innerHTML = (commentsHtml || '<p style="font-size:.82rem;color:var(--color-text-faint)">No comments yet.</p>') + inputHtml;
+    container.innerHTML = countLabel + commentsHtml + inputHtml;
   }
 
   async function submitComment(id) {
@@ -280,18 +319,16 @@
     var res = await API.addComment(id, content);
     if (!res.ok) { toast(res.error, "error"); return; }
 
-    // Update the count on the post card
     var item = state.posts.find(function (p) { return p.id === id; });
-    if (item) item.comments_count = res.data.comments_count;
+    if (item) item.comment_count = res.data.comment_count;
 
     var card = document.querySelector('[data-post-id="' + id + '"]');
     if (card) {
       var countEl = card.querySelector(".comment-count");
-      if (countEl) countEl.textContent = res.data.comments_count;
+      if (countEl) countEl.textContent = res.data.comment_count;
     }
 
     input.value = "";
-    // Re-open the thread to show the new comment
     var container = document.getElementById("comments-" + id);
     container.style.display = "none";
     toggleComments(id);
@@ -312,13 +349,13 @@
 
   /* ── REPORT (someone else's post) ────────────────────────────────────────── */
 
-  async function reportPost(id) {
-    var reason = prompt("Why are you reporting this post?\n\nType: spam, abuse, or inappropriate");
+  async function openReportPrompt(id) {
+    var reason = prompt("Why are you reporting this post?\n\nType exactly: spam, abuse, inappropriate, or other");
     if (!reason) return;
 
     reason = reason.trim().toLowerCase();
-    if (!["spam", "abuse", "inappropriate"].includes(reason)) {
-      toast("Please type exactly: spam, abuse, or inappropriate.", "error");
+    if (!["spam", "abuse", "inappropriate", "other"].includes(reason)) {
+      toast("Please type exactly: spam, abuse, inappropriate, or other.", "error");
       return;
     }
 
@@ -330,11 +367,11 @@
 
   /* ── PUBLIC API for inline onclick ───────────────────────────────────────── */
   window.StudentCommunity = {
-    toggleLike:     toggleLike,
-    toggleComments: toggleComments,
-    submitComment:  submitComment,
-    deletePost:     deletePost,
-    reportPost:     reportPost,
+    toggleLike:        toggleLike,
+    toggleComments:    toggleComments,
+    submitComment:      submitComment,
+    deletePost:        deletePost,
+    openReportPrompt:  openReportPrompt,
   };
 
   /* ── INIT ─────────────────────────────────────────────────────────────────── */
