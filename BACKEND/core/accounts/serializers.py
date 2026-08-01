@@ -189,9 +189,110 @@ class UserSerializer(serializers.ModelSerializer):
             "university",
             "phone_number",
             "role",
+            "is_active",
             "date_joined",
         ]
-        read_only_fields = ["id", "role", "date_joined", "email"]
+        read_only_fields = ["id", "role", "date_joined", "email", "is_active"]
 
     def get_full_name(self, obj):
         return obj.get_full_name()
+
+
+# ── ADMIN: CREATE STUDENT DIRECTLY ────────────────────────────────────────────
+
+class AdminCreateStudentSerializer(serializers.ModelSerializer):
+    """
+    Used exclusively by admins to create a student account directly
+    from the admin dashboard, instead of the student self-registering
+    through /api/register/.
+
+    Both paths create rows in the exact same User table, so admin-created
+    and self-registered students appear together in the same student
+    list — there is no separate storage.
+
+    Unlike the public RegisterSerializer, this does NOT require
+    confirm_password (the admin is creating the account on someone's
+    behalf, there's no "typo protection" need for a second field) and
+    will auto-generate a temporary password if none is supplied.
+    """
+
+    password = serializers.CharField(
+        write_only=True,
+        required=False,
+        allow_blank=True,
+        validators=[validate_password],
+        style={"input_type": "password"},
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "matric_number",
+            "department",
+            "level",
+            "phone_number",
+            "faculty",
+            "university",
+            "password",
+        ]
+        extra_kwargs = {
+            "first_name":    {"required": True},
+            "last_name":     {"required": True},
+            "email":         {"required": True},
+            "matric_number": {"required": False},
+            "department":    {"required": False},
+            "level":         {"required": False},
+            "phone_number":  {"required": False},
+            "faculty":       {"required": False},
+            "university":    {"required": False},
+        }
+
+    def validate_email(self, value):
+        value = value.lower().strip()
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "An account with this email address already exists."
+            )
+        return value
+
+    def validate_username(self, value):
+        value = value.strip()
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError(
+                "This username is already taken. Please choose another."
+            )
+        if len(value) < 3:
+            raise serializers.ValidationError(
+                "Username must be at least 3 characters long."
+            )
+        return value
+
+    def validate_matric_number(self, value):
+        if not value:
+            return value
+        value = value.strip()
+        if not value.isdigit():
+            raise serializers.ValidationError("Matric number must contain digits only.")
+        if len(value) != 9:
+            raise serializers.ValidationError("Matric number must be exactly 9 digits.")
+        if User.objects.filter(matric_number=value).exists():
+            raise serializers.ValidationError("This matric number is already registered.")
+        return value
+
+    def create(self, validated_data):
+        import secrets
+
+        password = validated_data.pop("password", "") or secrets.token_urlsafe(9)
+        validated_data["role"]  = User.STUDENT
+        validated_data["email"] = validated_data["email"].lower()
+
+        user = User.objects.create_user(password=password, **validated_data)
+
+        # Stash the generated password on the instance (not the DB) so the
+        # view can return it to the admin exactly once, right after creation.
+        user._generated_password = password
+        return user

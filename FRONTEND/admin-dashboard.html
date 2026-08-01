@@ -370,7 +370,37 @@
           <button class="tab-pill" data-com-filter="abuse">Abuse (2)</button>
           <button class="tab-pill" data-com-filter="inappropriate">Inappropriate (2)</button>
         </div>
-        <div style="display:flex;flex-direction:column;gap:var(--s4)" id="reportGrid">
+
+        <!-- ── ADMIN: WRITE A POST ─────────────────────────────────────── -->
+        <div class="panel" style="margin-top:var(--s6);margin-bottom:var(--s6)">
+          <div class="panel__head"><h2>Post as StudentPal Admin</h2></div>
+          <div style="display:flex;gap:var(--s4);align-items:flex-start">
+            <div class="admin-avatar admin-avatar--sm" style="flex-shrink:0">SA</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:var(--s3)">
+              <textarea id="adminComposeArea" placeholder="Share an update, tip, or announcement with the community…" rows="3"
+                        style="width:100%;padding:.75rem 1rem;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);font:inherit;font-size:.88rem;color:var(--text);resize:vertical"></textarea>
+              <div style="display:flex;justify-content:flex-end">
+                <button class="btn btn--primary btn--sm" id="adminComposeBtn">
+                  <i data-lucide="send" class="icon-xs"></i> Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ADMIN: ALL POSTS FEED ───────────────────────────────────── -->
+        <div class="panel" style="margin-bottom:var(--s6)">
+          <div class="panel__head">
+            <h2>Recent Posts</h2>
+            <span class="badge badge--neutral" id="adminPostCount">Loading…</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--s4)" id="adminPostFeed">
+            <p style="text-align:center;padding:2rem;color:var(--text-f)">Loading posts…</p>
+          </div>
+        </div>
+
+        <div class="panel__head" style="margin-bottom:var(--s4)"><h2>Reported Content</h2></div>
+          <div style="display:flex;flex-direction:column;gap:var(--s4)" id="reportGrid">
           <div class="report-card report-card--urgent" data-com-type="abuse"><div class="report-card__head"><div class="report-card__author"><div class="admin-avatar admin-avatar--sm">DK</div><div><p class="report-card__author-name">David Okunade</p><p class="report-card__author-dept">Economics · 400L</p></div></div><span class="badge badge--red">Abuse</span></div><p class="report-card__body">"Anyone who uploads fake notes should be expelled. This is a useless platform for useless people who can't…" [content continues]</p><div class="report-card__foot"><div class="report-meta"><i data-lucide="flag" class="icon-xs"></i>Reported by 3 users<i data-lucide="clock" class="icon-xs" style="margin-left:8px"></i>2 hours ago</div><div style="display:flex;gap:var(--s2)"><button class="btn btn--outline btn--xs" onclick="showToast('Post approved and reports dismissed.','success')"><i data-lucide="check" class="icon-xs"></i>Approve</button><button class="btn btn--danger btn--xs" onclick="confirmDelete(this,'post')"><i data-lucide="trash-2" class="icon-xs"></i>Delete</button><button class="btn btn--outline btn--xs" style="border-color:var(--amber);color:var(--amber)" onclick="showToast('Warning sent to user.','info')"><i data-lucide="alert-triangle" class="icon-xs"></i>Warn</button></div></div></div>
           <div class="report-card" data-com-type="spam"><div class="report-card__head"><div class="report-card__author"><div class="admin-avatar admin-avatar--sm" style="background:linear-gradient(135deg,#d97706,#dc2626)">XX</div><div><p class="report-card__author-name">Unknown User</p><p class="report-card__author-dept">Unverified account</p></div></div><span class="badge badge--amber">Spam</span></div><p class="report-card__body">"MAKE MONEY ONLINE!! WhatsApp +234 900 000 0000 to earn ₦50,000 daily from your phone…"</p><div class="report-card__foot"><div class="report-meta"><i data-lucide="flag" class="icon-xs"></i>Reported by 5 users<i data-lucide="clock" class="icon-xs" style="margin-left:8px"></i>1 hour ago</div><div style="display:flex;gap:var(--s2)"><button class="btn btn--danger btn--xs" onclick="confirmDelete(this,'post')"><i data-lucide="trash-2" class="icon-xs"></i>Delete</button><button class="btn btn--outline btn--xs" style="border-color:var(--amber);color:var(--amber)" onclick="showToast('Warning sent to user.','info')"><i data-lucide="alert-triangle" class="icon-xs"></i>Warn User</button></div></div></div>
           <div class="report-card" data-com-type="inappropriate"><div class="report-card__head"><div class="report-card__author"><div class="admin-avatar admin-avatar--sm" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">KA</div><div><p class="report-card__author-name">Kunle Adeyemi</p><p class="report-card__author-dept">Software Engineering · 400L</p></div></div><span class="badge badge--purple">Inappropriate</span></div><p class="report-card__body">"Nobody in this department actually helps each other. You people are always forming big boy for nothing…"</p><div class="report-card__foot"><div class="report-meta"><i data-lucide="flag" class="icon-xs"></i>Reported by 1 user<i data-lucide="clock" class="icon-xs" style="margin-left:8px"></i>4 hours ago</div><div style="display:flex;gap:var(--s2)"><button class="btn btn--outline btn--xs" onclick="showToast('Post approved and reports dismissed.','success')"><i data-lucide="check" class="icon-xs"></i>Approve</button><button class="btn btn--danger btn--xs" onclick="confirmDelete(this,'post')"><i data-lucide="trash-2" class="icon-xs"></i>Delete</button><button class="btn btn--outline btn--xs" style="border-color:var(--amber);color:var(--amber)" onclick="showToast('Warning sent to user.','info')"><i data-lucide="alert-triangle" class="icon-xs"></i>Warn</button></div></div></div>
@@ -707,7 +737,54 @@
 
 <!-- Add Student -->
 <div class="modal-overlay" id="addStudentModal">
-  <div class="modal"><div class="modal-head"><h3>Add Student</h3><button class="modal-close" onclick="closeModal('addStudentModal')"><i data-lucide="x" class="icon-sm"></i></button></div><div class="modal-body"><div class="modal-grid"><div class="modal-field"><label>First Name</label><input type="text" placeholder="First name" /></div><div class="modal-field"><label>Last Name</label><input type="text" placeholder="Last name" /></div></div><div class="modal-grid"><div class="modal-field"><label>Matric Number</label><input type="text" placeholder="201905000" maxlength="9" /></div><div class="modal-field"><label>Email</label><input type="email" placeholder="student@aaua.edu.ng" /></div></div><div class="modal-grid"><div class="modal-field"><label>Department</label><select><option>Computer Science</option><option>Mathematics</option><option>Physics</option><option>Economics</option></select></div><div class="modal-field"><label>Level</label><select><option>100 Level</option><option>200 Level</option><option>300 Level</option><option>400 Level</option></select></div></div></div><div class="modal-actions"><button class="btn btn--outline" onclick="closeModal('addStudentModal')">Cancel</button><button class="btn btn--primary" onclick="closeModal('addStudentModal');showToast('Student account created successfully.','success')"><i data-lucide="user-plus" class="icon-xs"></i>Add Student</button></div></div>
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Add Student</h3>
+      <button class="modal-close" onclick="closeModal('addStudentModal')"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="modal-field"><label for="addStuFirst">First Name</label><input type="text" id="addStuFirst" placeholder="First name" required /></div>
+        <div class="modal-field"><label for="addStuLast">Last Name</label><input type="text" id="addStuLast" placeholder="Last name" required /></div>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field"><label for="addStuUsername">Username</label><input type="text" id="addStuUsername" placeholder="e.g. tobiadebayo" required /></div>
+        <div class="modal-field"><label for="addStuMatric">Matric Number</label><input type="text" id="addStuMatric" placeholder="201905000" maxlength="9" /></div>
+      </div>
+      <div class="modal-field"><label for="addStuEmail">Email</label><input type="email" id="addStuEmail" placeholder="student@aaua.edu.ng" required /></div>
+      <div class="modal-grid">
+        <div class="modal-field">
+          <label for="addStuDept">Department</label>
+          <select id="addStuDept">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Economics">Economics</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="addStuLevel">Level</label>
+          <select id="addStuLevel">
+            <option value="100">100 Level</option>
+            <option value="200">200 Level</option>
+            <option value="300">300 Level</option>
+            <option value="400">400 Level</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label for="addStuPassword">Password <span style="color:var(--text-f);font-weight:400">(optional — leave blank to auto-generate)</span></label>
+        <input type="text" id="addStuPassword" placeholder="Leave blank to auto-generate a temporary password" />
+      </div>
+      <p id="addStuMsg" style="display:none;font-size:.82rem;padding:.6rem .8rem;border-radius:8px;background:var(--cyan-soft);color:var(--cyan)"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn--outline" onclick="closeModal('addStudentModal')">Cancel</button>
+      <button class="btn btn--primary" id="addStudentBtn" onclick="AdminStudents.create()">
+        <i data-lucide="user-plus" class="icon-xs"></i>Add Student
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Create Assignment -->
@@ -732,5 +809,6 @@
 <script src="js/admin-resources.js"></script>
 <script src="js/admin-opportunities.js"></script>
 <script src="js/admin-community.js"></script>
+<script src="js/admin-students.js"></script>
 </body>
 </html>

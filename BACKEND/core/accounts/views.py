@@ -10,8 +10,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
-from .models import User 
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .models import User
+from .serializers import (
+    RegisterSerializer, LoginSerializer, UserSerializer,
+    AdminCreateStudentSerializer,
+)
+from .permissions import IsAdminRole
 
 
 # ── HELPER ────────────────────────────────────────────────────────────────────
@@ -144,3 +148,116 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
             )
         serializer.save()
         return Response({"message": "Profile updated successfully.", "user": serializer.data})
+
+
+# ── ADMIN: STUDENT MANAGEMENT ──────────────────────────────────────────────────
+#
+# Both self-registered students (via /api/register/) and admin-created
+# students (via /api/admin/students/) are rows in the exact same User
+# table — there is no separate storage for either path. This view simply
+# lists everyone with role=student, regardless of how their account
+# was created.
+
+class AdminStudentListCreateView(APIView):
+    """
+    GET  /api/admin/students/
+        Optional filters: ?search=, ?department=, ?level=, ?status=active|suspended
+
+    POST /api/admin/students/
+        Admin creates a student account directly. Returns the generated
+        password ONCE in the response if none was supplied — the admin
+        must copy it now, it is never shown again (it's hashed in the DB
+        exactly like a self-registered student's password).
+    """
+    permission_classes = [IsAdminRole]
+
+    def get(self, request):
+        qs = User.objects.filter(role=User.STUDENT)
+
+        search = request.query_params.get("search", "").strip()
+        department = request.query_params.get("department")
+        level = request.query_params.get("level")
+        status_filter = request.query_params.get("status")
+
+        if search:
+            qs = qs.filter(first_name__icontains=search) | \
+                 qs.filter(last_name__icontains=search) | \
+                 qs.filter(matric_number__icontains=search) | \
+                 qs.filter(email__icontains=search)
+        if department:
+            qs = qs.filter(department__icontains=department)
+        if level:
+            qs = qs.filter(level=level)
+        if status_filter == "active":
+            qs = qs.filter(is_active=True)
+        elif status_filter == "suspended":
+            qs = qs.filter(is_active=False)
+
+        qs = qs.distinct().order_by("-date_joined")
+        serializer = UserSerializer(qs, many=True)
+        return Response({"count": qs.count(), "students": serializer.data})
+
+    def post(self, request):
+        serializer = AdminCreateStudentSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {"message": "Failed to create student.", "errors": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = serializer.save()
+        generated_password = getattr(user, "_generated_password", None)
+
+        response_data = {
+            "message": f"Student account created for {user.get_full_name()}.",
+            "student": UserSerializer(user).data,
+        }
+        # Only included when the admin didn't supply their own password —
+        # this is the one and only time it's ever visible in plaintext.
+        if generated_password:
+            response_data["generated_password"] = generated_password
+            response_data["message"] += " A temporary password was generated — share it securely."
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+class AdminStudentDetailView(APIView):
+    """
+    PATCH  /api/admin/students/<id>/   Body: { "is_active": false }  → suspend/unsuspend
+    DELETE /api/admin/students/<id>/   Permanently remove the account
+    """
+    permission_classes = [IsAdminRole]
+
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk, role=User.STUDENT)
+        except User.DoesNotExist:
+            return None
+
+    def patch(self, request, pk):
+        student = self.get_object(pk)
+        if not student:
+            return Response({"message": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if "is_active" in request.data:
+            student.is_active = bool(request.data["is_active"])
+            student.save()
+            action = "activated" if student.is_active else "suspended"
+            return Response({
+                "message": f"{student.get_full_name()} has been {action}.",
+                "student": UserSerializer(student).data,
+            })
+
+        return Response(
+            {"message": "No recognized fields to update. Use is_active: true/false."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    def delete(self, request, pk):
+        student = self.get_object(pk)
+        if not student:
+            return Response({"message": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        name = student.get_full_name()
+        student.delete()
+        return Response({"message": f"{name}'s account has been deleted."})

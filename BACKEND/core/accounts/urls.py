@@ -12,6 +12,8 @@ from .views import (
     LoginAPIView,
     LogoutAPIView,
     ProfileAPIView,
+    AdminStudentListCreateView,
+    AdminStudentDetailView,
 )
 
 urlpatterns = [
@@ -26,4 +28,10 @@ urlpatterns = [
 
     # ── Profile ──────────────────────────────────────────────────
     path("profile/", ProfileAPIView.as_view(), name="profile"),
+
+    # ── Admin: Student Management ──────────────────────────────────
+    # Same User table as /register/ — this just lists/creates/manages
+    # rows where role="student", regardless of how the account was made.
+    path("admin/students/",     AdminStudentListCreateView.as_view(), name="admin-student-list"),
+    path("admin/students/<int:pk>/", AdminStudentDetailView.as_view(), name="admin-student-detail"),
 ]
