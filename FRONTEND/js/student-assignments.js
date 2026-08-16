@@ -172,13 +172,16 @@
   /* ── FILTERS ──────────────────────────────────────────────────────────────── */
 
   function applyFilters() {
-    var searchInput = document.querySelector('[placeholder="Search assignments…"]');
-    var search = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    var statusSelect = document.getElementById("assignFilter");
+    var courseSelect = document.getElementById("assignCourseFilterStudent");
+
+    var status = statusSelect ? statusSelect.value : "";
+    var course = courseSelect ? courseSelect.value : "";
 
     var filtered = state.all.filter(function (a) {
-      return !search ||
-        a.title.toLowerCase().includes(search) ||
-        a.course_code.toLowerCase().includes(search);
+      var matchesStatus = !status || a.status === status;
+      var matchesCourse = !course || a.course_code.toUpperCase().startsWith(course);
+      return matchesStatus && matchesCourse;
     });
 
     render(filtered);
@@ -227,8 +230,10 @@
     }
     loadAssignments();
 
-    var searchInput = document.querySelector('[placeholder="Search assignments…"]');
-    if (searchInput) searchInput.addEventListener("input", applyFilters);
+    var statusSelect = document.getElementById("assignFilter");
+    var courseSelect = document.getElementById("assignCourseFilterStudent");
+    if (statusSelect) statusSelect.addEventListener("change", applyFilters);
+    if (courseSelect) courseSelect.addEventListener("change", applyFilters);
   }
 
   if (document.readyState === "loading") {
