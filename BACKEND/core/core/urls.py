@@ -25,7 +25,7 @@ urlpatterns = [
 
     path("api/opportunities/", include("opportunities.urls")),
     path("api/community/",     include("community.urls")),
-    # path("api/assignments/",   include("assignments.urls")),
+    path("api/assignments/",   include("assignments.urls")),
     # path("api/calendar/",      include("calendar_app.urls")),
 ]
 

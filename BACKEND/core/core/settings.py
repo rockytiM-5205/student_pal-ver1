@@ -1,18 +1,3 @@
-"""
-studentpal / settings.py
-Fixed version — resolves the "Could not reach the server" network error.
-
-Root causes that were fixed:
-  1. CORS_ALLOW_ALL_ORIGINS = True when DEBUG=True
-     The old config only allowed http://127.0.0.1:5500. Opening the HTML
-     from file://, localhost:5500, or any other origin caused the browser
-     to block the fetch() entirely — which lands in the catch block and
-     shows "Could not reach the server."
-
-  2. Added 'localhost' variants to ALLOWED_HOSTS for local dev.
-
-  3. Kept every line from the original settings.py unchanged.
-"""
 
 from dotenv import load_dotenv
 from pathlib import Path
@@ -52,6 +37,7 @@ INSTALLED_APPS = [
     "resources",
     "opportunities",
     "community",
+    "assignments",
 ]
 
 # ── MIDDLEWARE ─────────────────────────────────────────────────────────────────

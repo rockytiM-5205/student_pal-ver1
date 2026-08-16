@@ -75,19 +75,19 @@
       <div class="stats-row">
         <div class="stat-box">
           <div class="stat-box__icon" style="background:var(--color-warning-soft);color:var(--color-warning)"><i data-lucide="clock" class="icon-md"></i></div>
-          <p class="stat-box__num">4</p><p class="stat-box__label">Pending</p>
+          <p class="stat-box__num">0</p><p class="stat-box__label">Pending</p>
         </div>
         <div class="stat-box">
           <div class="stat-box__icon" style="background:var(--color-success-soft);color:var(--color-success)"><i data-lucide="check-circle" class="icon-md"></i></div>
-          <p class="stat-box__num">7</p><p class="stat-box__label">Submitted</p>
+          <p class="stat-box__num">0</p><p class="stat-box__label">Submitted</p>
         </div>
         <div class="stat-box">
           <div class="stat-box__icon" style="background:var(--color-danger-soft);color:var(--color-danger)"><i data-lucide="alert-circle" class="icon-md"></i></div>
-          <p class="stat-box__num">1</p><p class="stat-box__label">Overdue</p>
+          <p class="stat-box__num">0</p><p class="stat-box__label">Overdue</p>
         </div>
         <div class="stat-box">
           <div class="stat-box__icon" style="background:var(--color-primary-soft);color:var(--color-primary)"><i data-lucide="bar-chart-2" class="icon-md"></i></div>
-          <p class="stat-box__num">75%</p><p class="stat-box__label">Completion Rate</p>
+          <p class="stat-box__num">0%</p><p class="stat-box__label">Completion Rate</p>
         </div>
       </div>
 
@@ -98,7 +98,7 @@
           <option value="submitted">Submitted</option>
           <option value="overdue">Overdue</option>
         </select>
-        <select class="filter-select" aria-label="Filter by course" onchange="var v=this.value.toLowerCase();document.querySelectorAll('.assignment-card').forEach(function(c){c.style.display=(!v||c.getAttribute('data-course').toLowerCase().includes(v))?'':'none'})">
+        <select class="filter-select" id="assignCourseFilterStudent" aria-label="Filter by course">
           <option value="">All Courses</option>
           <option value="CSC">Computer Science</option>
           <option value="MTH">Mathematics</option>
@@ -107,131 +107,13 @@
         </select>
       </div>
 
-      <div class="assignment-list">
+      <div class="assignment-list" id="assignmentList">
 
-        <article class="assignment-card assignment-card--overdue" data-status="overdue" data-assign-id="a1" data-course="PHY 101">
-          <div class="assignment-card__icon" style="background:var(--color-danger-soft);color:var(--color-danger)">
-            <i data-lucide="alert-circle" class="icon-md"></i>
-          </div>
+        <article class="assignment-card" data-status="pending">
+          <div class="assignment-card__icon"><i data-lucide="clipboard-list" class="icon-md"></i></div>
           <div>
-            <p class="assignment-card__course">PHY 101</p>
-            <h3 class="assignment-card__title">Mechanics Problem Set — Chapter 4 &amp; 5</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Dr. Adeleke Rasheed</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Due: June 18, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--red">Overdue</span>
-            <button class="btn btn--outline btn--sm submit-btn" data-assign="a1">Submit Late</button>
-          </div>
-        </article>
-
-        <article class="assignment-card" data-status="pending" data-assign-id="a2" data-course="CSC 201">
-          <div class="assignment-card__icon">
-            <i data-lucide="code-2" class="icon-md"></i>
-          </div>
-          <div>
-            <p class="assignment-card__course">CSC 201</p>
-            <h3 class="assignment-card__title">Implement a Linked List in C — Lab Assignment 3</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Dr. Funmilayo Okafor</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Due: June 24, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--amber">Pending</span>
-            <button class="btn btn--primary btn--sm submit-btn" data-assign="a2">Submit</button>
-          </div>
-        </article>
-
-        <article class="assignment-card" data-status="pending" data-assign-id="a3" data-course="MTH 201">
-          <div class="assignment-card__icon">
-            <i data-lucide="sigma" class="icon-md"></i>
-          </div>
-          <div>
-            <p class="assignment-card__course">MTH 201</p>
-            <h3 class="assignment-card__title">Linear Algebra — Matrix Operations Problem Set</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Prof. Adewale Bamisile</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Due: June 26, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--amber">Pending</span>
-            <button class="btn btn--primary btn--sm submit-btn" data-assign="a3">Submit</button>
-          </div>
-        </article>
-
-        <article class="assignment-card" data-status="pending" data-assign-id="a4" data-course="GST 202">
-          <div class="assignment-card__icon">
-            <i data-lucide="pen-line" class="icon-md"></i>
-          </div>
-          <div>
-            <p class="assignment-card__course">GST 202</p>
-            <h3 class="assignment-card__title">Essay: The Role of Logic in Critical Thinking</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Mrs. Ngozi Ihejirika</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Due: June 28, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--amber">Pending</span>
-            <button class="btn btn--primary btn--sm submit-btn" data-assign="a4">Submit</button>
-          </div>
-        </article>
-
-        <article class="assignment-card" data-status="pending" data-assign-id="a5" data-course="CSC 203">
-          <div class="assignment-card__icon">
-            <i data-lucide="layout" class="icon-md"></i>
-          </div>
-          <div>
-            <p class="assignment-card__course">CSC 203</p>
-            <h3 class="assignment-card__title">OOP Mini-Project: Design a Simple Bank System</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Dr. Chukwuemeka Eze</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Due: July 2, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--amber">Pending</span>
-            <button class="btn btn--primary btn--sm submit-btn" data-assign="a5">Submit</button>
-          </div>
-        </article>
-
-        <article class="assignment-card" data-status="submitted" data-assign-id="a6" data-course="CSC 201">
-          <div class="assignment-card__icon" style="background:var(--color-success-soft);color:var(--color-success)">
-            <i data-lucide="check-circle" class="icon-md"></i>
-          </div>
-          <div>
-            <p class="assignment-card__course">CSC 201</p>
-            <h3 class="assignment-card__title">Binary Search Tree — Lab Assignment 2</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Dr. Funmilayo Okafor</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Submitted: June 12, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--green">Submitted</span>
-            <button class="btn btn--outline btn--sm" disabled>Submitted</button>
-          </div>
-        </article>
-
-        <article class="assignment-card" data-status="submitted" data-assign-id="a7" data-course="MTH 201">
-          <div class="assignment-card__icon" style="background:var(--color-success-soft);color:var(--color-success)">
-            <i data-lucide="check-circle" class="icon-md"></i>
-          </div>
-          <div>
-            <p class="assignment-card__course">MTH 201</p>
-            <h3 class="assignment-card__title">Calculus Assignment — Differentiation &amp; Integration</h3>
-            <div class="assignment-card__meta">
-              <span class="assignment-card__meta-item"><i data-lucide="user" class="icon-xs"></i>Prof. Adewale Bamisile</span>
-              <span class="assignment-card__meta-item"><i data-lucide="calendar" class="icon-xs"></i>Submitted: June 8, 2026</span>
-            </div>
-          </div>
-          <div class="assignment-card__actions">
-            <span class="badge badge--green">Submitted</span>
-            <button class="btn btn--outline btn--sm" disabled>Submitted</button>
+            <p class="assignment-card__course">Loading…</p>
+            <h3 class="assignment-card__title">Fetching your assignments</h3>
           </div>
         </article>
 
@@ -243,5 +125,6 @@
 <script src="js/auth-guard.js"></script>
 <script src="js/api.js"></script>
 <script src="js/main.js"></script>
+<script src="js/student-assignments.js"></script>
 </body>
 </html>
